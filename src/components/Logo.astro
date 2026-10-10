@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/images/logo-komplex-dach.png';
+
+interface Props {
+  class?: string;
+  width?: number;
+  eager?: boolean;
+}
+const { class: cls = '', width = 168, eager = false } = Astro.props;
+---
+
+<a href="/" class:list={['group inline-flex flex-col items-start', cls]} aria-label="Komplex-Dach Piła — strona główna">
+  <Image
+    src={logo}
+    alt="Komplex-Dach"
+    width={width}
+    widths={[width, width * 2]}
+    sizes={`${width}px`}
+    loading={eager ? 'eager' : 'lazy'}
+    class="h-auto select-none"
+    style={`width:${width}px`}
+  />
+  <span class="mt-1 self-end font-mono text-[0.58rem] uppercase tracking-[0.42em] text-white/55">Piła</span>
+</a>

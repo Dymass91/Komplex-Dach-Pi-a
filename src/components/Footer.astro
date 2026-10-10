@@ -1,0 +1,77 @@
+---
+import { business, nav } from '../data/site';
+import { services } from '../data/services';
+import { locationPages } from '../data/locations';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-ink text-white/70">
+  <div class="container-x grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_1fr_1fr_1fr] lg:gap-10">
+    <div>
+      <Logo width={170} />
+      <p class="mt-6 max-w-xs text-sm leading-relaxed">
+        Profesjonalne usługi dekarskie w Pile i w promieniu około 100 km. Kompleksowe dachy, naprawy, przeglądy, serwis
+        i prace przy dachu.
+      </p>
+    </div>
+
+    <nav aria-label="Nawigacja w stopce">
+      <h2 class="mb-5 text-sm font-semibold text-white">Nawigacja</h2>
+      <ul class="space-y-2.5 text-sm">
+        {nav.map((n) => <li><a class="transition-colors hover:text-white" href={n.href}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-label="Usługi">
+      <h2 class="mb-5 text-sm font-semibold text-white">Usługi</h2>
+      <ul class="space-y-2.5 text-sm">
+        {
+          services.map((s) => (
+            <li><a class="transition-colors hover:text-white" href={`/uslugi/${s.slug}/`}>{s.name}</a></li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav aria-label="Obszar działania">
+      <h2 class="mb-5 text-sm font-semibold text-white">Dekarz w okolicy</h2>
+      <ul class="space-y-2.5 text-sm">
+        <li><a class="transition-colors hover:text-white" href="/">Dekarz Piła</a></li>
+        {
+          locationPages.map((l) => (
+            <li><a class="transition-colors hover:text-white" href={`/obszar-dzialania/${l.slug}/`}>Dekarz {l.name}</a></li>
+          ))
+        }
+        <li><a class="text-sky transition-colors hover:text-white" href="/obszar-dzialania/">Cały obszar działania</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="mb-5 text-sm font-semibold text-white">Szybki kontakt</h2>
+      <a href={business.phoneHref} data-call="footer" class="group flex items-start gap-3">
+        <Icon name="call" size={26} class="mt-0.5 text-blue" />
+        <span>
+          <span class="block text-xl font-bold text-white transition-colors group-hover:text-sky">{business.phoneDisplay}</span>
+          <span class="text-sm">Zadzwoń i umów wycenę</span>
+        </span>
+      </a>
+      <div class="mt-6 flex items-start gap-3">
+        <Icon name="pin" size={26} class="mt-0.5 text-blue" />
+        <p class="text-sm">
+          <span class="block text-base font-semibold text-white">Piła</span>
+          Obsługujemy klientów w promieniu około {business.radiusKm} km
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-x flex flex-col gap-2 py-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {business.name}. Wszelkie prawa zastrzeżone.</p>
+      <p>Kontakt wyłącznie telefoniczny: <a class="text-white/70 hover:text-white" href={business.phoneHref}>{business.phoneDisplay}</a></p>
+    </div>
+  </div>
+</footer>

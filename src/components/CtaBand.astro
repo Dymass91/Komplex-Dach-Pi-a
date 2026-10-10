@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import { photos } from '../data/images';
+import { business } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  title?: string;
+  text?: string;
+}
+const { title = 'Masz pytania lub potrzebujesz wyceny?', text = 'Zadzwoń — porozmawiamy o Twoim dachu i ustalimy szczegóły.' } = Astro.props;
+const [a, b, c] = business.phoneDisplay.split(' ');
+---
+
+<section id="kontakt" class="relative isolate overflow-hidden bg-ink text-white" aria-labelledby="cta-title">
+  <div class="absolute inset-0 -z-10 overflow-hidden">
+    <div class="absolute inset-[-12%_0]" data-parallax="14">
+      <Image src={photos.dachRusztowanie.src} alt="" widths={[680]} sizes="100vw" class="h-full w-full object-cover opacity-25 grayscale" />
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/90 to-ink/60"></div>
+    <div class="grid-lines absolute inset-0 opacity-40"></div>
+  </div>
+
+  <div class="container-x py-20 md:py-28">
+    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between" data-reveal>
+      <div class="max-w-2xl">
+        <p class="eyebrow eyebrow-light">Kontakt telefoniczny</p>
+        <h2 id="cta-title" class="mt-4 text-[clamp(1.8rem,3.4vw,2.8rem)] font-bold leading-tight tracking-tight text-balance">{title}</h2>
+      </div>
+      <p class="max-w-sm text-white/65 md:text-right">{text}</p>
+    </div>
+
+    <a
+      href={business.phoneHref}
+      data-call="cta-big"
+      class="group relative mt-10 block border-y border-white/15 py-8 md:mt-14 md:py-10"
+      aria-label={`Zadzwoń: ${business.phoneDisplay}`}
+      data-reveal
+    >
+      <span class="flex items-center justify-between gap-6">
+        <span class="h-display flex flex-wrap gap-x-[0.25em] text-[clamp(2.9rem,11vw,9.5rem)] leading-none transition-colors duration-500 group-hover:text-sky">
+          <span>{a}</span><span>{b}</span><span>{c}</span>
+        </span>
+        <span class="hidden h-24 w-24 shrink-0 place-items-center rounded-full bg-blue shadow-[0_20px_60px_-15px_rgba(31,123,255,0.9)] transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-110 group-hover:-rotate-12 md:grid lg:h-32 lg:w-32">
+          <Icon name="phone" size={44} stroke={1.6} />
+        </span>
+      </span>
+      <span class="absolute bottom-[-1px] left-0 h-px w-full origin-left scale-x-0 bg-sky transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-x-100"></span>
+    </a>
+
+    <div class="mt-6 flex flex-col gap-2 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-white/45 sm:flex-row sm:justify-between">
+      <span>Piła · obszar działania ok. {business.radiusKm} km</span>
+      <span>Kontakt wyłącznie telefoniczny</span>
+    </div>
+  </div>
+</section>

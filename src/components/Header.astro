@@ -1,0 +1,98 @@
+---
+import { nav, business } from '../data/site';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import PhoneLink from './PhoneLink.astro';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : !href.includes('#') && path.startsWith(href));
+---
+
+<header
+  data-header
+  class="fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 data-[scrolled=true]:bg-ink/85 data-[scrolled=true]:shadow-[0_1px_0_rgba(255,255,255,0.06)] data-[scrolled=true]:backdrop-blur-md"
+>
+  <div class="container-x flex h-[76px] items-center justify-between gap-6">
+    <Logo width={150} eager />
+
+    <nav aria-label="Główna nawigacja" class="hidden lg:block">
+      <ul class="flex items-center gap-7 text-[0.82rem] font-medium text-white/80">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'relative py-2 transition-colors hover:text-white after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:bg-sky after:transition-transform after:duration-300 hover:after:scale-x-100',
+                  isActive(item.href) && 'text-white after:scale-x-100',
+                ]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-5">
+      <PhoneLink variant="plain" arrow={false} class="hidden text-[0.95rem] text-white transition-colors hover:text-sky md:inline-flex" location="header-number" />
+      <a href={business.phoneHref} class="btn-primary hidden !px-5 !py-2.5 !text-[0.82rem] sm:inline-flex" data-call="header-button">
+        Zadzwoń teraz
+      </a>
+      <button
+        type="button"
+        class="-mr-2 inline-flex h-11 w-11 items-center justify-center text-white lg:hidden"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        data-menu-toggle
+      >
+        <span class="sr-only">Menu</span>
+        <Icon name="menu" size={26} class="[[aria-expanded=true]>&]:hidden" />
+        <Icon name="close" size={26} class="hidden [[aria-expanded=true]>&]:block" />
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="hidden border-t border-white/10 bg-ink/97 lg:hidden" data-menu>
+    <nav aria-label="Menu mobilne" class="container-x py-6">
+      <ul class="divide-y divide-white/10">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} class="flex items-center justify-between py-4 text-lg font-semibold text-white">
+                {item.label}
+                <Icon name="arrow" size={18} class="text-sky" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <PhoneLink class="mt-6 w-full" location="mobile-menu" />
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  const onScroll = () => {
+    if (!header) return;
+    const open = toggle?.getAttribute('aria-expanded') === 'true';
+    header.dataset.scrolled = String(window.scrollY > 24 || open);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const setOpen = (open: boolean) => {
+    toggle?.setAttribute('aria-expanded', String(open));
+    menu?.classList.toggle('hidden', !open);
+    onScroll();
+  };
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
+</script>

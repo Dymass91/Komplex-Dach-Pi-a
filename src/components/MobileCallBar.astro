@@ -1,0 +1,39 @@
+---
+import { business } from '../data/site';
+import Icon from './Icon.astro';
+---
+
+<!-- Przyklejony przycisk połączenia na telefonach — pojawia się po przewinięciu hero -->
+<div
+  data-callbar
+  class="pointer-events-none fixed inset-x-0 bottom-0 z-40 translate-y-full px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-500 ease-[var(--ease-out-expo)] data-[visible=true]:pointer-events-auto data-[visible=true]:translate-y-0 md:hidden"
+>
+  <a
+    href={business.phoneHref}
+    data-call="mobile-sticky"
+    class="flex items-center justify-between rounded-xl bg-blue px-5 py-3.5 text-white shadow-[0_18px_40px_-12px_rgba(7,10,16,0.65)]"
+  >
+    <span class="flex items-center gap-3">
+      <span class="relative grid h-9 w-9 place-items-center rounded-full bg-white/15">
+        <span class="absolute inset-0 animate-ping rounded-full bg-white/20 motion-reduce:hidden" style="animation-duration:2.4s"></span>
+        <Icon name="phone" size={18} stroke={1.9} />
+      </span>
+      <span class="leading-tight">
+        <span class="block font-mono text-[0.6rem] uppercase tracking-[0.18em] text-white/75">Zadzwoń</span>
+        <span class="block text-lg font-bold tracking-tight">{business.phoneDisplay}</span>
+      </span>
+    </span>
+    <Icon name="arrow" size={20} />
+  </a>
+</div>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-callbar]');
+  const update = () => {
+    if (!bar) return;
+    const nearEnd = window.innerHeight + window.scrollY > document.body.scrollHeight - 260;
+    bar.dataset.visible = String(window.scrollY > window.innerHeight * 0.6 && !nearEnd);
+  };
+  update();
+  window.addEventListener('scroll', update, { passive: true });
+</script>

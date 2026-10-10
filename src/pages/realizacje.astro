@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Gallery from '../components/Gallery.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { photos } from '../data/images';
+
+const crumbs = [
+  { name: 'Strona główna', href: '/' },
+  { name: 'Realizacje', href: '/realizacje/' },
+];
+---
+
+<Base
+  title="Realizacje — zdjęcia dachów i obróbek | Komplex-Dach Piła"
+  description="Zdjęcia z pracy Komplex-Dach: pokrycia dachowe, lukarny, obróbki kominów i prace dekarskie w Pile i okolicach. Autentyczne zdjęcia bez retuszu."
+  breadcrumbs={crumbs}
+>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Realizacje"
+    title="Zdjęcia z naszej pracy"
+    lead="Pokazujemy prawdziwe zdjęcia — wykonane telefonem, na budowie, bez upiększania. Kliknij zdjęcie, aby je powiększyć."
+  />
+
+  <section class="bg-paper py-16 md:py-24" aria-label="Galeria realizacji">
+    <div class="container-x">
+      <Gallery layout="grid" />
+    </div>
+  </section>
+
+  <section class="bg-white py-16 md:py-24" aria-labelledby="retusz-title">
+    <div class="container-x grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+      <div data-reveal>
+        <p class="eyebrow">Uwaga o zdjęciach</p>
+        <h2 id="retusz-title" class="h-section mt-3">Oryginał i kadr poprawiony cyfrowo</h2>
+        <p class="mt-5 max-w-lg leading-relaxed text-ink/70">
+          Na stronie głównej i w nagłówkach używamy także kilku kadrów poprawionych cyfrowo (światło, kolor, kadrowanie) —
+          wyłącznie jako ilustracji. Są zawsze opisane. Dokumentacją naszej pracy są oryginalne zdjęcia w galerii powyżej.
+        </p>
+      </div>
+      <div class="grid grid-cols-[0.55fr_1fr] gap-3" data-reveal>
+        <figure>
+          <Image src={photos.budynekWieczor.src} alt={photos.budynekWieczor.alt} widths={[382]} sizes="20vw" class="aspect-[3/4] w-full rounded-md object-cover" />
+          <figcaption class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink/50">Zdjęcie oryginalne</figcaption>
+        </figure>
+        <figure>
+          <Image src={photos.retuszBudynek.src} alt={photos.retuszBudynek.alt} widths={[760]} sizes="40vw" class="aspect-[3/4] w-full rounded-md object-cover object-[72%_center]" />
+          <figcaption class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink/50">Kadr poprawiony cyfrowo — ilustracja</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Chcesz podobny dach? Zadzwoń." />
+</Base>

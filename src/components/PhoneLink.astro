@@ -1,0 +1,26 @@
+---
+import { business } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  variant?: 'primary' | 'dark' | 'ghost' | 'plain';
+  class?: string;
+  label?: string;
+  arrow?: boolean;
+  /** Identyfikator miejsca kliknięcia (np. do analityki) */
+  location?: string;
+}
+const { variant = 'primary', class: cls = '', label, arrow = true, location } = Astro.props;
+const base = variant === 'plain' ? 'inline-flex items-center gap-2.5 font-semibold' : `btn-${variant}`;
+---
+
+<a
+  href={business.phoneHref}
+  class:list={[base, cls]}
+  data-call={location}
+  aria-label={`Zadzwoń: ${business.phoneDisplay}`}
+>
+  <Icon name="phone" size={18} stroke={1.8} />
+  <span>{label ?? business.phoneDisplay}</span>
+  {arrow && variant !== 'plain' && <Icon name="arrow" size={18} class="arrow" />}
+</a>

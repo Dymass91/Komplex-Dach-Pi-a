@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Drawing from '../../components/Drawing.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import { services } from '../../data/services';
+import { photos } from '../../data/images';
+
+const crumbs = [
+  { name: 'Strona główna', href: '/' },
+  { name: 'Usługi', href: '/uslugi/' },
+];
+const site = Astro.site!;
+const listLd = {
+  '@type': 'ItemList',
+  name: 'Usługi dekarskie Komplex-Dach Piła',
+  itemListElement: services.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: new URL(`/uslugi/${s.slug}/`, site).href })),
+};
+---
+
+<Base
+  title="Usługi dekarskie Piła — dachy, naprawy, przeglądy | Komplex-Dach"
+  description="Pełna lista usług dekarskich Komplex-Dach w Pile i okolicach: wykonanie dachów, naprawy, przeglądy, serwis, wyceny, docieplenia poddaszy, okna dachowe, odśnieżanie."
+  breadcrumbs={crumbs}
+  jsonLd={[listLd]}
+>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Usługi"
+    title="Usługi dekarskie w Pile i okolicach"
+    lead="Od nowego dachu po pojedynczą dachówkę. Wybierz usługę, aby dowiedzieć się więcej — albo po prostu zadzwoń i opisz, czego potrzebujesz."
+  />
+
+  <section class="bg-paper py-16 md:py-24" aria-label="Lista usług">
+    <div class="container-x">
+      <ol class="divide-y divide-ink/10 border-y border-ink/10">
+        {
+          services.map((s, i) => (
+            <li data-reveal>
+              <a href={`/uslugi/${s.slug}/`} class="group grid grid-cols-[auto_1fr_auto] items-center gap-5 py-6 md:grid-cols-[60px_160px_1fr_auto] md:gap-8 md:py-7">
+                <span class="font-mono text-xs text-blue">{String(i + 1).padStart(2, '0')}</span>
+                <span class="hidden aspect-[4/3] overflow-hidden rounded-md md:block">
+                  {s.photo ? (
+                    <Image src={photos[s.photo].src} alt="" widths={[320]} sizes="160px" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  ) : (
+                    <Drawing name={s.drawing} label="" />
+                  )}
+                </span>
+                <span>
+                  <h2 class="text-[clamp(1.2rem,2.2vw,1.75rem)] font-bold tracking-tight transition-colors group-hover:text-blue">{s.name}</h2>
+                  <p class="mt-1.5 line-clamp-2 max-w-2xl text-sm text-ink/60">{s.lead}</p>
+                </span>
+                <span class="grid h-11 w-11 place-items-center rounded-full border border-ink/15 transition-colors group-hover:border-blue group-hover:bg-blue group-hover:text-white">
+                  <Icon name="arrow" size={18} />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>

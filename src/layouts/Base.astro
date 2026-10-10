@@ -1,0 +1,141 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '@fontsource/jetbrains-mono/latin-ext-500.css';
+import '@fontsource/caveat/latin-600.css';
+import '@fontsource/caveat/latin-ext-600.css';
+import '../styles/global.css';
+
+import { getImage } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileCallBar from '../components/MobileCallBar.astro';
+import { business } from '../data/site';
+import { services } from '../data/services';
+import { photos } from '../data/images';
+import logo from '../assets/images/logo-komplex-dach.png';
+
+export interface Crumb { name: string; href: string }
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: ImageMetadata;
+  breadcrumbs?: Crumb[];
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, ogImage = photos.retuszBudynek.src, breadcrumbs, jsonLd = [] } = Astro.props;
+
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+const allowIndexing = process.env.ALLOW_INDEXING === 'true';
+
+const og = await getImage({ src: ogImage, width: 1200, format: 'jpg', quality: 80 });
+const ogUrl = new URL(og.src, site).href;
+const logoImg = await getImage({ src: logo, width: 600, format: 'png' });
+
+const businessId = new URL('/#firma', site).href;
+
+const graph: Record<string, unknown>[] = [
+  {
+    '@type': 'RoofingContractor',
+    '@id': businessId,
+    name: business.name,
+    url: new URL('/', site).href,
+    telephone: business.phoneE164,
+    logo: new URL(logoImg.src, site).href,
+    image: ogUrl,
+    address: { '@type': 'PostalAddress', addressLocality: business.city, addressRegion: business.region, addressCountry: business.country },
+    geo: { '@type': 'GeoCoordinates', latitude: business.geo.lat, longitude: business.geo.lon },
+    areaServed: {
+      '@type': 'GeoCircle',
+      geoMidpoint: { '@type': 'GeoCoordinates', latitude: business.geo.lat, longitude: business.geo.lon },
+      geoRadius: business.radiusKm * 1000,
+    },
+    knowsAbout: services.map((s) => s.name),
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Usługi dekarskie',
+      itemListElement: services.map((s) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: s.name, url: new URL(`/uslugi/${s.slug}/`, site).href },
+      })),
+    },
+  },
+  {
+    '@type': 'WebSite',
+    '@id': new URL('/#strona', site).href,
+    url: new URL('/', site).href,
+    name: business.name,
+    inLanguage: 'pl-PL',
+    publisher: { '@id': businessId },
+  },
+];
+
+if (breadcrumbs?.length) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.href, site).href })),
+  });
+}
+graph.push(...jsonLd);
+
+const schema = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {!allowIndexing && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#070a10" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content={String(og.attributes.width ?? 1200)} />
+    <meta property="og:image:height" content={String(og.attributes.height ?? '')} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={schema} />
+
+    <script is:inline>
+      // Animacje tylko przy włączonym JS i bez preferencji ograniczenia ruchu.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('js-motion');
+        // Zabezpieczenie: gdyby skrypt animacji się nie załadował, treść musi być widoczna.
+        setTimeout(function () {
+          if (!window.__kdMotion) document.documentElement.classList.remove('js-motion');
+        }, 2500);
+      }
+    </script>
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen">
+    <a href="#tresc" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-ink">
+      Przejdź do treści
+    </a>
+    <Header />
+    <main id="tresc">
+      <slot />
+    </main>
+    <Footer />
+    <MobileCallBar />
+
+    <script>
+      import { initMotion } from '../scripts/motion';
+      initMotion();
+    </script>
+  </body>
+</html>

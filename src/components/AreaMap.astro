@@ -1,0 +1,74 @@
+---
+// Schematyczna mapa obszaru działania: Piła w centrum, pierścienie co 25 km.
+// Pozycje miejscowości wyliczone z ich współrzędnych geograficznych.
+import { locations, offsetKm } from '../data/locations';
+
+interface Props {
+  class?: string;
+  /** Wyróżniona miejscowość (strony lokalne) */
+  highlight?: string;
+  compact?: boolean;
+}
+const { class: cls = '', highlight, compact = false } = Astro.props;
+const R = 100;
+const points = locations.map((l) => ({ ...l, ...offsetKm(l) }));
+---
+
+<svg
+  viewBox="-118 -118 236 236"
+  class:list={['h-auto w-full overflow-visible', cls]}
+  role="img"
+  aria-labelledby="map-title"
+  data-area-map
+>
+  <title id="map-title">Schematyczna mapa obszaru działania Komplex-Dach: Piła i miejscowości w promieniu około 100 km</title>
+  <g fill="none">
+    <circle data-ring r={R} fill="#1f7bff" fill-opacity="0.07" stroke="#1f7bff" stroke-width="0.8" />
+    {[75, 50, 25].map((r) => (
+      <circle data-ring r={r} stroke="#1f7bff" stroke-opacity="0.22" stroke-width="0.4" stroke-dasharray="1.5 2" />
+    ))}
+    <path d={`M${-R} 0H${R}M0 ${-R}V${R}`} stroke="#1f7bff" stroke-opacity="0.12" stroke-width="0.4" />
+  </g>
+  {!compact && (
+    <g font-family="JetBrains Mono, monospace" font-size="4" fill="#1f7bff" fill-opacity="0.6">
+      <text x="2" y="-26.5">25 km</text>
+      <text x="2" y="-51.5">50 km</text>
+      <text x="2" y="-76.5">75 km</text>
+      <text x="2" y="-101.5">100 km</text>
+    </g>
+  )}
+
+  <g font-family="Archivo Variable, sans-serif">
+    {
+      points.map((p) => {
+        const isHi = highlight === p.slug;
+        const showLabel = p.major || isHi || !compact;
+        const left = p.x < 0;
+        return (
+          <g data-town transform={`translate(${p.x.toFixed(1)} ${(-p.y).toFixed(1)})`}>
+            <circle r={isHi ? 2.4 : p.major ? 1.5 : 1} fill={isHi ? '#03a3e8' : '#0b111b'} fill-opacity={p.major || isHi ? 0.9 : 0.45} />
+            {showLabel && (
+              <text
+                x={left ? -3 : 3}
+                y="1.6"
+                text-anchor={left ? 'end' : 'start'}
+                font-size={isHi ? 6 : p.major ? 5 : 3.6}
+                font-weight={isHi || p.major ? 600 : 400}
+                fill={isHi ? '#03a3e8' : '#0b111b'}
+                fill-opacity={p.major || isHi ? 0.85 : 0.5}
+              >
+                {p.name}
+              </text>
+            )}
+          </g>
+        );
+      })
+    }
+  </g>
+
+  <g data-center transform="scale(0.75)">
+    <path d="M0 -2c0 0-7-6.4-7-11.4a7 7 0 0 1 14 0C7 -8.4 0 -2 0 -2z" fill="#1f7bff" />
+    <circle cy="-13.4" r="2.6" fill="#fff" />
+    <text y="7" text-anchor="middle" font-size="6.5" font-weight="700" fill="#1f7bff" font-family="Archivo Variable, sans-serif">Piła</text>
+  </g>
+</svg>

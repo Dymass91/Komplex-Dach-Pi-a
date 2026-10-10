@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PhoneLink from '../components/PhoneLink.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base title="Nie znaleziono strony | Komplex-Dach Piła" description="Ta strona nie istnieje. Przejdź do strony głównej Komplex-Dach Piła lub zadzwoń: 601 568 841.">
+  <section class="relative flex min-h-[80svh] items-center overflow-hidden bg-ink pt-24 text-white">
+    <div class="grid-lines absolute inset-0 opacity-60"></div>
+    <div class="container-x relative">
+      <p class="eyebrow eyebrow-light">Błąd 404</p>
+      <h1 class="h-display mt-4 text-[clamp(3rem,10vw,8rem)]">Tu nie ma<br /><span class="text-blue">dachu</span></h1>
+      <p class="mt-6 max-w-md text-white/70">Strona, której szukasz, nie istnieje lub została przeniesiona.</p>
+      <div class="mt-8 flex flex-wrap items-center gap-6">
+        <PhoneLink location="404" />
+        <a href="/" class="link-arrow !text-white/80">Strona główna <Icon name="arrow" size={16} /></a>
+      </div>
+    </div>
+  </section>
+</Base>

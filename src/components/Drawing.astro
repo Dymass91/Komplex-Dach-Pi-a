@@ -1,0 +1,107 @@
+---
+// Rysunki techniczne w stylu „blueprint” — używane tam, gdzie nie mamy autentycznego zdjęcia.
+// Nie udają zdjęć realizacji.
+import type { Drawing } from '../data/services';
+
+interface Props {
+  name: Drawing;
+  class?: string;
+  label?: string;
+}
+const { name, class: cls = '', label } = Astro.props;
+const id = `g-${name}-${Math.random().toString(36).slice(2, 7)}`;
+---
+
+<svg viewBox="0 0 400 300" class:list={['block h-full w-full bg-graphite', cls]} role="img" aria-label={label ?? 'Rysunek techniczny'}>
+  <defs>
+    <pattern id={id} width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#ffffff" stroke-opacity="0.05" />
+    </pattern>
+    <linearGradient id={`${id}-fade`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f7bff" stop-opacity="0.18" />
+      <stop offset="1" stop-color="#1f7bff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill={`url(#${id})`} />
+  <g fill="none" stroke="#5fb4ff" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+    {name === 'window' && (
+      <>
+        <path d="M30 250 200 70 370 250" stroke-opacity="0.5" />
+        <path d="M60 250 200 102 340 250" stroke-opacity="0.25" stroke-dasharray="4 6" />
+        <path d="M168 128 238 128 262 214 144 214Z" fill={`url(#${id}-fade)`} />
+        <path d="M176 138 232 138 251 205 155 205Z" />
+        <path d="M203 138 203 205M165 172h76" stroke-opacity="0.6" />
+        <path d="M144 214 134 226h138l-10-12" stroke-opacity="0.7" />
+        <path d="M290 128h40M290 214h40M318 128v86" stroke="#03a3e8" stroke-opacity="0.8" />
+        <text x="324" y="176" fill="#03a3e8" stroke="none" font-size="10" font-family="monospace">H</text>
+      </>
+    )}
+    {name === 'insulation' && (
+      <>
+        <path d="M20 240 200 60 380 240" stroke-opacity="0.6" />
+        <path d="M44 240 200 84 356 240" stroke-opacity="0.4" />
+        {Array.from({ length: 9 }).map((_, i) => (
+          <path d={`M${68 + i * 30} ${240 - (i < 5 ? i : 8 - i) * 30 - 20} q8 -10 16 0 t16 0`} stroke="#03a3e8" stroke-opacity="0.75" />
+        ))}
+        <path d="M68 240 200 108 332 240" fill={`url(#${id}-fade)`} stroke-dasharray="3 5" />
+        <path d="M20 250h360" stroke-opacity="0.3" />
+        <path d="M60 268h80M60 262v12M140 262v12" stroke="#03a3e8" stroke-opacity="0.6" />
+        <text x="150" y="272" fill="#5fb4ff" stroke="none" font-size="10" font-family="monospace">izolacja</text>
+      </>
+    )}
+    {name === 'snow' && (
+      <>
+        <path d="M40 240 200 90 360 240" stroke-opacity="0.6" />
+        <path d="M60 222 200 92 340 222 340 200 200 72 60 200Z" fill={`url(#${id}-fade)`} stroke="#03a3e8" stroke-opacity="0.6" />
+        {[[90, 50], [150, 34], [260, 44], [320, 64], [205, 26], [120, 80]].map(([x, y]) => (
+          <g transform={`translate(${x} ${y})`} stroke="#ffffff" stroke-opacity="0.55">
+            <path d="M0 -7v14M-6 -3.5l12 7M6 -3.5l-12 7" />
+          </g>
+        ))}
+        <path d="M352 244l8 24M366 236l12 18" stroke="#03a3e8" stroke-opacity="0.6" stroke-dasharray="2 4" />
+      </>
+    )}
+    {name === 'estimate' && (
+      <>
+        <path d="M60 220 160 120 260 220Z" stroke-opacity="0.6" fill={`url(#${id}-fade)`} />
+        <path d="M160 120 300 120 360 180 260 220" stroke-opacity="0.45" />
+        <path d="M60 240h200M60 234v12M260 234v12" stroke="#03a3e8" stroke-opacity="0.8" />
+        <path d="M280 220v-40M274 220h12M274 180h12" stroke="#03a3e8" stroke-opacity="0.8" />
+        <text x="140" y="262" fill="#03a3e8" stroke="none" font-size="10" font-family="monospace">L = ? m</text>
+        <path d="M110 170l100 0M135 145l50 0" stroke-opacity="0.25" stroke-dasharray="4 5" />
+        <circle cx="160" cy="120" r="4" fill="#03a3e8" stroke="none" />
+      </>
+    )}
+    {name === 'inspection' && (
+      <>
+        <path d="M30 240 200 80 370 240" stroke-opacity="0.6" />
+        <path d="M250 127v-30h22v50" stroke-opacity="0.6" />
+        <circle cx="236" cy="150" r="42" stroke="#03a3e8" fill={`url(#${id}-fade)`} />
+        <path d="m266 180 34 34" stroke="#03a3e8" stroke-width="3" />
+        <path d="M212 158l46-30M206 145l26-17" stroke-opacity="0.7" />
+        <circle cx="244" cy="141" r="3" fill="#ffffff" stroke="none" />
+      </>
+    )}
+    {name === 'service' && (
+      <>
+        <path d="M30 230 200 80 370 230" stroke-opacity="0.6" />
+        <path d="M70 230V180M330 230V180" stroke-opacity="0.35" />
+        {Array.from({ length: 6 }).map((_, i) => (
+          <path d={`M${80 + i * 20} ${210 - i * 17.6} h${240 - i * 40}`} stroke-opacity="0.18" />
+        ))}
+        <path d="M262 108v-36h26v58" stroke="#03a3e8" stroke-opacity="0.8" />
+        <path d="M30 240h340" stroke-opacity="0.3" stroke-dasharray="4 6" />
+      </>
+    )}
+    {name === 'flashing' && (
+      <>
+        <path d="M30 250 230 70 370 196" stroke-opacity="0.5" />
+        <path d="M200 40h70v130h-70Z" stroke="#03a3e8" fill={`url(#${id}-fade)`} />
+        <path d="M194 34h82v8h-82Z" stroke="#03a3e8" />
+        <path d="M200 70h70M200 100h70M200 130h70" stroke-opacity="0.4" />
+        <path d="M188 182 200 170h70l18 16" stroke-opacity="0.8" />
+      </>
+    )}
+  </g>
+  <text x="18" y="284" fill="#ffffff" fill-opacity="0.35" font-size="9" font-family="monospace" letter-spacing="2">RYS. TECHNICZNY · KOMPLEX-DACH</text>
+</svg>
