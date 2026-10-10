@@ -16,15 +16,11 @@ export async function initMotion() {
   gsap.defaults({ ease: 'expo.out', duration: 1.1 });
 
   // --- Hero --------------------------------------------------------------
+  // Wejście hero jest w CSS (global.css, kd-line/kd-rise/kd-zoom), aby nie opóźniać LCP.
+  // Tutaj tylko efekty związane z przewijaniem.
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   if (hero) {
-    const tl = gsap.timeline({ delay: 0.1 });
     const media = hero.querySelector('[data-hero-media]');
-    if (media) tl.fromTo(media, { scale: 1.14, opacity: 0 }, { scale: 1, opacity: 1, duration: 2.2, ease: 'power3.out' }, 0);
-    tl.fromTo(hero.querySelectorAll('[data-hero-line] > span'), { y: 0, yPercent: 105 }, { yPercent: 0, duration: 1.2, stagger: 0.09 }, 0.25);
-    tl.fromTo(hero.querySelectorAll('[data-hero-fade]'), { opacity: 0 }, { opacity: 1, duration: 1, stagger: 0.08 }, 0.7);
-    tl.fromTo(hero.querySelectorAll('[data-hero-rise]'), { y: 24 }, { y: 0, duration: 1.2, stagger: 0.08 }, 0.7);
-
     // Parallax tła hero przy przewijaniu
     if (media) {
       gsap.to(media, {
@@ -45,14 +41,14 @@ export async function initMotion() {
   }
 
   // --- Ujawnianie tekstu i bloków ------------------------------------------
-  ScrollTrigger.batch('[data-reveal]', {
+  ScrollTrigger.batch('[data-reveal]:not([data-instant])', {
     start: 'top 88%',
     once: true,
     onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 28 }, { opacity: 1, y: 0, stagger: 0.08, duration: 1 }),
   });
 
   // --- Ujawnianie zdjęć (clip-path + delikatny zoom) -------------------------
-  gsap.utils.toArray<HTMLElement>('[data-reveal-img]').forEach((el) => {
+  gsap.utils.toArray<HTMLElement>('[data-reveal-img]:not([data-instant])').forEach((el) => {
     const img = el.querySelector('img');
     const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
     tl.fromTo(el, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'expo.inOut' });

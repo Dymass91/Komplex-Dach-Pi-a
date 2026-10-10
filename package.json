@@ -12,7 +12,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "images": "node scripts/prepare-images.mjs",
-    "deploy": "astro build && wrangler pages deploy dist --project-name=komplex-dach-pila --branch=main"
+    "deploy": "node scripts/deploy.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

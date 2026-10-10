@@ -49,29 +49,78 @@ Zdjęcie z lokalnej realizacji jest cenne, ale niewymagane. Obecnie wszystkie 7 
 
 ## SEO i indeksowanie
 
-Zmienne środowiskowe (Cloudflare Pages → Settings → Environment variables):
+Dwie zmienne środowiskowe sterują adresami i indeksowaniem:
 
 | Zmienna | Opis |
 | --- | --- |
-| `SITE_URL` | Docelowa domena, np. `https://twojadomena.pl`. Gdy brak — używany jest adres wdrożenia Cloudflare. |
+| `SITE_URL` | Adres, pod którym publikujesz stronę — trafia do canonical, Open Graph i sitemapy. Sama domena z `https://`, bez ścieżki. |
 | `ALLOW_INDEXING` | `true` włącza indeksowanie. **Domyślnie wyłączone.** |
 
-Dopóki `ALLOW_INDEXING` nie jest `true`, strona ma `noindex` w meta, nagłówek `X-Robots-Tag: noindex`
-(plik `_headers`) i `Disallow: /` w robots.txt. Po podpięciu domeny: ustaw `SITE_URL` i `ALLOW_INDEXING=true`,
-zrób ponowne wdrożenie, a potem zgłoś `sitemap-index.xml` w Google Search Console.
+**Wersja demonstracyjna (domyślnie):** każda podstrona ma `noindex, nofollow` (meta + nagłówek `X-Robots-Tag`
+w `_headers`), a robots.txt zawiera `Disallow: /`.
 
-## Wdrożenie: GitHub → Cloudflare Pages
+**Wersja produkcyjna (`ALLOW_INDEXING=true`):** build **odmówi działania**, jeśli `SITE_URL`:
+- nie jest ustawiony,
+- nie używa `https://` albo zawiera ścieżkę,
+- wskazuje na `localhost` lub tymczasową domenę `*.pages.dev`.
 
-1. Cloudflare Dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
-2. Autoryzuj GitHub i wybierz repozytorium `Dymass91/Komplex-Dach-Pi-a`.
-3. Ustawienia buildu:
-   - Framework preset: **Astro**
-   - Production branch: **main**
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-   - Root directory: (puste — katalog główny repozytorium)
-4. Environment variables (Production): `ALLOW_INDEXING=false` (lub pomiń). `SITE_URL` ustaw dopiero, gdy domena będzie gotowa.
-5. **Save and Deploy**. Każdy push do `main` automatycznie aktualizuje stronę.
+Dzięki temu localhost ani adres Cloudflare nie mogą przypadkiem trafić do canonical indeksowanej strony.
+Strony lokalne z `indexable: false` zachowują `noindex, follow` także w wersji produkcyjnej.
+
+## Wdrożenie (stan obecny): Cloudflare Pages — Direct Upload z tego komputera
+
+Projekt Cloudflare Pages `komplex-dach-pila` jest typu **Direct Upload**: strona jest budowana **lokalnie**,
+a gotowy katalog `dist/` wysyłany przez Wranglera. Adres demo: https://komplex-dach-pila-cge.pages.dev/
+
+> ⚠️ Zmienne ustawione w panelu Cloudflare (Settings → Environment variables) **nie mają wpływu** na ten tryb.
+> Liczą się wyłącznie zmienne ustawione w lokalnej powłoce przed uruchomieniem `npm run deploy`.
+
+Jednorazowo: `npx wrangler login` (logowanie do konta Cloudflare).
+
+**Wersja demonstracyjna (bez indeksowania):**
+
+```bash
+# bash / Git Bash
+SITE_URL=https://komplex-dach-pila-cge.pages.dev npm run deploy
+```
+
+```powershell
+# PowerShell
+$env:SITE_URL='https://komplex-dach-pila-cge.pages.dev'; npm run deploy
+```
+
+**Start produkcyjny (po podpięciu własnej domeny w Cloudflare → Custom domains):**
+
+```bash
+SITE_URL=https://docelowa-domena.pl ALLOW_INDEXING=true npm run deploy
+```
+
+`npm run deploy` (`scripts/deploy.mjs`) sprawdza `SITE_URL` przed buildem i przerywa wdrożenie, jeśli adresu brak,
+jest niepoprawny, wskazuje na localhost albo — przy włączonym indeksowaniu — na `*.pages.dev`.
+Wdrożenie trafia na gałąź produkcyjną `main` projektu.
+
+Push do GitHuba **nie** aktualizuje strony automatycznie — po zmianach uruchom `npm run deploy`.
+
+### Lista kontrolna startu produkcyjnego
+
+1. Ustal i zabezpiecz domenę docelową (stara domena `komplex-dach.pila.pl` obecnie nie istnieje w DNS).
+2. Podłącz domenę w Cloudflare Pages → projekt → **Custom domains**.
+3. Wdróż z `SITE_URL=https://docelowa-domena.pl ALLOW_INDEXING=true`.
+4. Sprawdź na żywo: canonical, robots.txt (`Allow: /`), `sitemap-index.xml`, brak `X-Robots-Tag` na stronach głównych,
+   `noindex, follow` na 7 stronach lokalnych.
+5. Przekieruj `komplex-dach-pila-cge.pages.dev` na domenę (Cloudflare → Bulk Redirects).
+6. Zgłoś sitemapę w Google Search Console i zaktualizuj adres strony w profilu Google Business Profile.
+
+### Opcjonalnie: automatyczne wdrożenia
+
+Każdy push do `main` może aktualizować stronę na dwa sposoby:
+
+- **GitHub Actions** z tokenem API Cloudflare (uprawnienie *Cloudflare Pages: Edit*) zapisanym jako sekret repozytorium;
+  zmienne `SITE_URL` / `ALLOW_INDEXING` ustawia się wtedy w pliku workflow lub w zmiennych GitHuba.
+- **Nowy projekt Cloudflare Pages połączony z Gitem** (Workers & Pages → Create → Pages → Connect to Git; preset Astro,
+  build `npm run build`, katalog `dist`). Projektu Direct Upload nie da się później podłączyć do Gita, więc zmieni się
+  adres `*.pages.dev`. W tym trybie zmienne ustawia się w panelu Cloudflare — `ALLOW_INDEXING=true` i `SITE_URL`
+  **tylko w środowisku Production**, nigdy w Preview.
 
 Strona jest w pełni statyczna — adapter SSR Cloudflare nie jest potrzebny.
 
@@ -79,5 +128,7 @@ Strona jest w pełni statyczna — adapter SSR Cloudflare nie jest potrzebny.
 
 - Kontakt wyłącznie telefoniczny: `tel:+48601568841`. Bez formularzy i adresów e-mail.
 - Bez wymyślonych opinii, liczby realizacji, certyfikatów, gwarancji, cen i dostępności 24/7.
-- Kadry poprawione cyfrowo (ChatGPT) są używane tylko dekoracyjnie i zawsze podpisane.
-- „Około 25 lat doświadczenia” — sformułowanie w `src/data/site.ts`, do potwierdzenia z właścicielem.
+- Kadr przetworzony cyfrowo przez AI (zdjęcie w hero) jest używany wyłącznie jako ilustracja, zawsze z widoczną
+  adnotacją; nigdy jako obraz udostępnień (Open Graph) ani w danych strukturalnych.
+- Doświadczenie: firma działa od **2001 r.** (potwierdzone). Liczba lat jest wyliczana przy buildzie w `src/data/site.ts`.
+- Ulica, kod pocztowy i współrzędne firmy — dopiero po weryfikacji z właścicielem.

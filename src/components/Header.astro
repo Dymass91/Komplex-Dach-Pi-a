@@ -87,12 +87,38 @@ const isActive = (href: string) => (href === '/' ? path === '/' : !href.includes
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  const setOpen = (open: boolean) => {
+  const isOpen = () => toggle?.getAttribute('aria-expanded') === 'true';
+  const setOpen = (open: boolean, returnFocus = false) => {
     toggle?.setAttribute('aria-expanded', String(open));
     menu?.classList.toggle('hidden', !open);
     onScroll();
+    if (!open && returnFocus) toggle?.focus();
   };
-  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  toggle?.addEventListener('click', () => setOpen(!isOpen()));
   menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
+  // Zamknięcie i powrót fokusu na przycisk; menu nie wypuszcza fokusu klawiszem Tab, gdy jest otwarte.
+  document.addEventListener('keydown', (e) => {
+    if (!isOpen() || !toggle || !menu) return;
+    if (e.key === 'Escape') {
+      setOpen(false, true);
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const items = [toggle, ...menu.querySelectorAll<HTMLElement>('a[href], button')];
+    const first = items[0];
+    const last = items[items.length - 1];
+    const active = document.activeElement as HTMLElement | null;
+    if (!active || !items.includes(active)) {
+      e.preventDefault();
+      first.focus();
+    } else if (e.shiftKey && active === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+  // Po przejściu na szeroki ekran menu mobilne się zamyka
+  matchMedia('(min-width: 1024px)').addEventListener('change', (m) => m.matches && setOpen(false));
 </script>

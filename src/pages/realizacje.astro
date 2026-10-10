@@ -34,20 +34,21 @@ const crumbs = [
     <div class="container-x grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
       <div data-reveal>
         <p class="eyebrow">Uwaga o zdjęciach</p>
-        <h2 id="retusz-title" class="h-section mt-3">Oryginał i kadr poprawiony cyfrowo</h2>
+        <h2 id="retusz-title" class="h-section mt-3">Oryginał i kadr przetworzony cyfrowo</h2>
         <p class="mt-5 max-w-lg leading-relaxed text-ink/70">
-          Na stronie głównej i w nagłówkach używamy także kilku kadrów poprawionych cyfrowo (światło, kolor, kadrowanie) —
-          wyłącznie jako ilustracji. Są zawsze opisane. Dokumentacją naszej pracy są oryginalne zdjęcia w galerii powyżej.
+          W nagłówku strony głównej używamy kadru przetworzonego cyfrowo przy pomocy narzędzia AI — zmienione zostały
+          m.in. niebo, odbicia w szybach i oświetlenie. Służy wyłącznie jako ilustracja i jest opisany przy zdjęciu.
+          Dokumentacją naszej pracy są oryginalne, nieprzetworzone zdjęcia w galerii powyżej.
         </p>
       </div>
       <div class="grid grid-cols-[0.55fr_1fr] gap-3" data-reveal>
         <figure>
           <Image src={photos.budynekWieczor.src} alt={photos.budynekWieczor.alt} widths={[382]} sizes="20vw" class="aspect-[3/4] w-full rounded-md object-cover" />
-          <figcaption class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink/50">Zdjęcie oryginalne</figcaption>
+          <figcaption class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink/65">Zdjęcie oryginalne</figcaption>
         </figure>
         <figure>
           <Image src={photos.retuszBudynek.src} alt={photos.retuszBudynek.alt} widths={[760]} sizes="40vw" class="aspect-[3/4] w-full rounded-md object-cover object-[72%_center]" />
-          <figcaption class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink/50">Kadr poprawiony cyfrowo — ilustracja</figcaption>
+          <figcaption class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink/65">Kadr przetworzony cyfrowo (AI) — ilustracja</figcaption>
         </figure>
       </div>
     </div>

@@ -27,7 +27,7 @@ export const services: Service[] = [
     slug: 'wykonanie-dachow',
     name: 'Kompleksowe wykonanie dachów',
     card: ['Wykonanie', 'dachów'],
-    metaTitle: 'Wykonanie dachów Piła — kompleksowe pokrycia dachowe | Komplex-Dach',
+    metaTitle: 'Wykonanie dachów Piła — pokrycia dachowe | Komplex-Dach',
     metaDescription:
       'Kompleksowe wykonanie dachów w Pile i w promieniu ok. 100 km: pokrycia dachowe na nowych domach i przy wymianie starego dachu. Zadzwoń: 601 568 841.',
     h1: 'Kompleksowe wykonanie dachów w Pile i okolicach',
@@ -343,7 +343,7 @@ export const services: Service[] = [
     slug: 'odsniezanie-dachow',
     name: 'Odśnieżanie dachów',
     card: ['Odśnieżanie', 'dachów'],
-    metaTitle: 'Odśnieżanie dachów Piła — domy, hale, budynki firmowe | Komplex-Dach',
+    metaTitle: 'Odśnieżanie dachów Piła — domy, hale, firmy | Komplex-Dach',
     metaDescription:
       'Odśnieżanie dachów w Pile i okolicach: domy, budynki wspólnot, hale i obiekty firmowe. Zadzwoń: 601 568 841.',
     h1: 'Odśnieżanie dachów — Piła i okolice',

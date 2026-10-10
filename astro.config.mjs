@@ -4,16 +4,22 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { writeFile } from 'node:fs/promises';
 import { noindexLocationPaths } from './src/data/locations.ts';
+import { validateSiteUrl } from './scripts/site-url.mjs';
 
 /**
- * SITE_URL — docelowa domena produkcyjna (np. https://twojadomena.pl).
- * Dopóki nie jest ustawiona, używany jest adres wdrożenia Cloudflare (CF_PAGES_URL)
- * lub localhost — a strona pozostaje wyłączona z indeksowania.
- * ALLOW_INDEXING=true — włącza indeksowanie (ustaw dopiero na domenie produkcyjnej).
+ * SITE_URL — adres, pod którym strona jest publikowana (canonical, Open Graph, sitemapa).
+ * ALLOW_INDEXING=true — włącza indeksowanie; wymaga SITE_URL z docelową domeną (https, bez localhost i *.pages.dev).
+ * Bez ALLOW_INDEXING strona jest wersją demonstracyjną: noindex, nofollow na każdej podstronie.
  * Strony lokalne z `indexable: false` pozostają noindex, follow także po włączeniu indeksowania.
+ * Szczegóły wdrożenia: README.md.
  */
-const site = (process.env.SITE_URL || process.env.CF_PAGES_URL || 'http://localhost:4321').replace(/\/$/, '');
 const allowIndexing = process.env.ALLOW_INDEXING === 'true';
+const { url: siteUrl, errors: siteErrors } = validateSiteUrl(process.env.SITE_URL, { allowIndexing });
+if (siteErrors.length) {
+  throw new Error(`Nieprawidłowa konfiguracja SITE_URL / ALLOW_INDEXING:\n- ${siteErrors.join('\n- ')}`);
+}
+// Bez SITE_URL (praca lokalna, wersja demo) używany jest localhost — nigdy przy włączonym indeksowaniu.
+const site = siteUrl ? siteUrl.origin : 'http://localhost:4321';
 
 /** Nagłówki Cloudflare Pages (_headers): noindex dla wersji demo, a w produkcji dla stron lokalnych wyłączonych z indeksowania. */
 /** @returns {import('astro').AstroIntegration} */
@@ -39,7 +45,7 @@ export default defineConfig({
   output: 'static',
   integrations: [
     // Strony noindex nie trafiają do sitemapy
-    sitemap({ filter: (page) => !noindexLocationPaths.some((path) => new URL(page).pathname === path) }),
+    sitemap({ lastmod: new Date(), filter: (page) => !noindexLocationPaths.some((path) => new URL(page).pathname === path) }),
     robotsHeaders(),
   ],
   vite: { plugins: [tailwindcss()] },

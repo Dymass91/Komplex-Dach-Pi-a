@@ -29,7 +29,7 @@ const blueprintFor: Record<string, ComponentProps<typeof BlueprintCard>['service
 };
 
 const why = [
-  { icon: 'badge', title: 'Doświadczenie', text: `${business.experienceLabel} przy dachach` },
+  { icon: 'badge', title: 'Doświadczenie', text: `${business.experienceLabel} na rynku, od ${business.foundingYear} r.` },
   { icon: 'layers', title: 'Szeroki zakres usług', text: 'od nowych dachów po drobne naprawy' },
   { icon: 'tools', title: 'Własny sprzęt', text: 'profesjonalne narzędzia i warsztat' },
   { icon: 'users', title: 'Obsługa klientów', text: 'indywidualnych, firm i wspólnot' },
@@ -67,8 +67,8 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
 ---
 
 <Base
-  title="Dekarz Piła — wykonanie dachów, naprawy i przeglądy | Komplex-Dach"
-  description="Komplex-Dach Piła: kompleksowe wykonanie dachów, naprawy i usuwanie przecieków, przeglądy, docieplenie poddaszy, okna dachowe, odśnieżanie. Piła i ok. 100 km. Tel. 601 568 841."
+  title="Dekarz Piła — dachy, naprawy i przeglądy | Komplex-Dach"
+  description="Komplex-Dach Piła od 2001 r.: wykonanie dachów, naprawy przecieków, przeglądy, docieplenia, okna dachowe, odśnieżanie. Piła i ok. 100 km. Tel. 601 568 841."
   jsonLd={[faqLd]}
 >
   <!-- 1. HERO -->
@@ -97,25 +97,25 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
     <div class="container-x relative flex flex-1 flex-col justify-end pb-10 pt-32 md:justify-center md:pb-12 md:pt-36" data-hero-content>
       <p class="eyebrow eyebrow-light max-w-[22rem] leading-relaxed" data-hero-fade>Profesjonalne usługi dekarskie w Pile i okolicach</p>
       <h1 id="hero-title" class="h-display mt-5 whitespace-nowrap text-[clamp(2.25rem,10.5vw,5.5rem)]">
-        <span data-hero-line><span>Dachy,</span></span>
-        <span data-hero-line><span>które budzą</span></span>
+        <span data-hero-line><span>Dachy, </span></span>
+        <span data-hero-line><span>które budzą </span></span>
         <span data-hero-line><span class="text-blue">podziw.</span></span>
       </h1>
-      <p class="mt-6 max-w-[30rem] text-[1.05rem] leading-relaxed text-white/80" data-hero-fade data-hero-rise>
+      <p class="mt-6 max-w-[30rem] text-[1.05rem] leading-relaxed text-white/80" data-hero-fade>
         Kompleksowe wykonanie dachów, naprawy, przeglądy, serwis i wszystkie niezbędne prace dekarskie. Z dbałością o każdy
         detal — od pokrycia po obróbkę komina.
       </p>
-      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3" data-hero-fade data-hero-rise>
+      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3" data-hero-fade>
         <PhoneLink class="!px-7 !py-4 !text-lg" location="hero" />
         <a href="#realizacje" class="link-arrow !text-white/80 hover:!text-white">Zobacz realizacje <Icon name="arrow" size={16} /></a>
       </div>
-      <p class="mt-3 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-white/50" data-hero-fade>Zadzwoń i umów wycenę</p>
+      <p class="mt-3 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-white/60" data-hero-fade>Zadzwoń i umów wycenę</p>
 
       <dl class="mt-12 grid max-w-2xl grid-cols-3 divide-x divide-white/15 border-t border-white/10 pt-6 md:mt-16" data-hero-fade>
         <div class="pr-4">
           <dt class="sr-only">Doświadczenie</dt>
-          <dd class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold leading-none">ok. <span data-count={business.experienceYears}>{business.experienceYears}</span></dd>
-          <dd class="mt-2 text-xs text-white/60 sm:text-sm">lat doświadczenia</dd>
+          <dd class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold leading-none"><span data-count={business.experienceYears}>{business.experienceYears}</span></dd>
+          <dd class="mt-2 text-xs text-white/60 sm:text-sm">{business.experienceUnit} doświadczenia</dd>
         </div>
         <div class="px-4 sm:px-6">
           <dt class="sr-only">Zakres usług</dt>
@@ -140,15 +140,15 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
         </svg>
         <p class="font-mono text-[0.68rem] font-medium uppercase leading-[1.9] tracking-[0.28em] text-white/85">
           Rzemiosło dekarskie<br />
-          <span class="text-white/50">Piła / Wielkopolska</span>
+          <span class="text-white/60">Piła / Wielkopolska</span>
         </p>
       </div>
-      <div class="ml-16 mt-4 flex items-center gap-2 font-mono text-[0.58rem] uppercase tracking-[0.24em] text-white/35">
+      <div class="ml-16 mt-4 flex items-center gap-2 font-mono text-[0.58rem] uppercase tracking-[0.24em] text-white/60">
         <span class="h-px w-10 bg-sky/70"></span>53°09′N · 16°44′E
       </div>
     </div>
-    <p class="absolute bottom-4 right-5 hidden font-mono text-[0.58rem] uppercase tracking-[0.16em] text-white/35 md:block">
-      Fot. 01 — kadr poprawiony cyfrowo, ilustracyjny
+    <p class="absolute bottom-3 right-5 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-white/60 md:bottom-4 md:text-[0.58rem]">
+      Fot. 01 — kadr przetworzony cyfrowo (AI), ilustracja
     </p>
   </section>
 
@@ -189,8 +189,8 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
         }
       </ul>
 
-      <p class="mt-12 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-ink/10 pt-6 text-sm text-ink/60" data-reveal>
-        <span class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ink/45">Także:</span>
+      <p class="mt-12 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-ink/10 pt-6 text-sm text-ink/65" data-reveal>
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ink/65">Także:</span>
         {more.map((s) => <a href={`/uslugi/${s.slug}/`} class="font-medium text-ink/80 underline decoration-blue/40 underline-offset-4 hover:text-blue">{s.name}</a>)}
       </p>
     </div>
@@ -205,7 +205,7 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
           <p class="eyebrow eyebrow-light">O firmie</p>
           <h2 id="why-title" class="h-section mt-3">Dlaczego<br />Komplex-Dach?</h2>
           <p class="mt-6 max-w-md leading-relaxed text-white/70">
-            Od {business.experienceLabel} zajmujemy się dachami w Pile i okolicach. Stawiamy na solidne wykonanie,
+            Od {business.foundingYear} roku zajmujemy się dachami w Pile i okolicach. Stawiamy na solidne wykonanie,
             sprawdzone materiały i uczciwe podejście do każdej realizacji — niezależnie od jej wielkości.
           </p>
           <PhoneLink class="mt-8" location="why" />
@@ -236,7 +236,7 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
         <div>
           <p class="eyebrow">Realizacje</p>
           <h2 id="realizacje-title" class="h-section mt-3">Wybrane realizacje</h2>
-          <p class="mt-3 max-w-xl text-sm text-ink/60">Prawdziwe zdjęcia z naszej pracy — bez retuszu. Kliknij, aby powiększyć.</p>
+          <p class="mt-3 max-w-xl text-sm text-ink/65">Prawdziwe zdjęcia z naszej pracy — bez retuszu. Kliknij, aby powiększyć.</p>
         </div>
         <a href="/realizacje/" class="link-arrow">Zobacz więcej realizacji <Icon name="arrow" size={16} /></a>
       </div>
@@ -260,7 +260,7 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
 
       <div class="mx-auto w-full max-w-[520px]" data-reveal>
         <AreaMap compact />
-        <p class="mt-2 text-center font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink/40">Schemat · odległości w linii prostej</p>
+        <p class="mt-2 text-center font-mono text-[0.6rem] uppercase tracking-[0.14em] text-ink/65">Schemat · odległości w linii prostej</p>
       </div>
 
       <div class="rounded-xl bg-night p-6 text-white shadow-[0_30px_60px_-30px_rgba(7,10,16,0.6)]" data-reveal>
@@ -278,7 +278,7 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
               );
             })
           }
-          <li class="mt-1 text-white/50">i wiele innych</li>
+          <li class="mt-1 text-white/60">i wiele innych</li>
         </ul>
       </div>
     </div>
@@ -388,7 +388,7 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
                   <span class="block font-semibold">{s.title}</span>
                   <span class="block text-sm text-white/60">{s.text}</span>
                 </span>
-                <Icon name="arrow" size={18} class="text-white/40 transition-all duration-300 group-hover:translate-x-1 group-hover:text-sky" />
+                <Icon name="arrow" size={18} class="text-white/60 transition-all duration-300 group-hover:translate-x-1 group-hover:text-sky" />
               </a>
             </li>
           ))
@@ -407,19 +407,19 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
       <ul class="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <li class="overflow-hidden rounded-lg bg-white shadow-[0_1px_0_rgba(7,10,16,0.06)]" data-reveal>
           <div class="aspect-[16/10] overflow-hidden"><BuildingBlueprint type="dom" label="Rysunek techniczny: dom jednorodzinny z dachem dwuspadowym" /></div>
-          <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Domy jednorodzinne</h3><p class="mt-1 text-xs text-ink/60 sm:text-sm">Nowe dachy, wymiana pokrycia, naprawy</p></div>
+          <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Domy jednorodzinne</h3><p class="mt-1 text-xs text-ink/65 sm:text-sm">Nowe dachy, wymiana pokrycia, naprawy</p></div>
         </li>
         <li class="overflow-hidden rounded-lg bg-white shadow-[0_1px_0_rgba(7,10,16,0.06)]" data-reveal>
           <div class="aspect-[16/10] overflow-hidden"><BuildingBlueprint type="usługowy" label="Rysunek techniczny: nowoczesny budynek usługowy" /></div>
-          <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Firmy i budynki usługowe</h3><p class="mt-1 text-xs text-ink/60 sm:text-sm">Wykonanie, serwis, przeglądy</p></div>
+          <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Firmy i budynki usługowe</h3><p class="mt-1 text-xs text-ink/65 sm:text-sm">Wykonanie, serwis, przeglądy</p></div>
         </li>
         <li class="overflow-hidden rounded-lg bg-white shadow-[0_1px_0_rgba(7,10,16,0.06)]" data-reveal>
           <div class="aspect-[16/10] overflow-hidden"><BuildingBlueprint type="wielorodzinny" label="Rysunek techniczny: wielokondygnacyjny budynek mieszkalny z balkonami" /></div>
-          <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Wspólnoty mieszkaniowe</h3><p class="mt-1 text-xs text-ink/60 sm:text-sm">Dachy budynków wielorodzinnych</p></div>
+          <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Wspólnoty mieszkaniowe</h3><p class="mt-1 text-xs text-ink/65 sm:text-sm">Dachy budynków wielorodzinnych</p></div>
         </li>
         <li class="overflow-hidden rounded-lg bg-white shadow-[0_1px_0_rgba(7,10,16,0.06)]" data-reveal>
           <div class="aspect-[16/10] overflow-hidden"><BuildingBlueprint type="hala" label="Rysunek techniczny: hala przemysłowa z bramą segmentową" /></div>
-          <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Obiekty komercyjne i przemysłowe</h3><p class="mt-1 text-xs text-ink/60 sm:text-sm">Dachy hal, magazynów, odśnieżanie</p></div>
+          <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Obiekty komercyjne i przemysłowe</h3><p class="mt-1 text-xs text-ink/65 sm:text-sm">Dachy hal, magazynów, odśnieżanie</p></div>
         </li>
       </ul>
     </div>
@@ -464,7 +464,7 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
       <div data-reveal>
         <p class="eyebrow">Najczęściej zadawane pytania</p>
         <h2 id="faq-title" class="h-section mt-3">FAQ</h2>
-        <p class="mt-4 text-sm text-ink/60">Nie ma tu Twojego pytania? Zadzwoń — odpowiemy od razu.</p>
+        <p class="mt-4 text-sm text-ink/65">Nie ma tu Twojego pytania? Zadzwoń — odpowiemy od razu.</p>
         <PhoneLink variant="dark" class="mt-6 !py-3 !text-sm" location="faq" />
       </div>
       <Faq items={faq} />

@@ -1,4 +1,11 @@
 // Zweryfikowane dane firmy — jedyne źródło prawdy dla treści kontaktowych i SEO.
+
+// Potwierdzone przez właściciela: firma działa od 2001 r. Lata doświadczenia liczone przy buildzie.
+const FOUNDING_YEAR = 2001;
+const years = new Date().getFullYear() - FOUNDING_YEAR;
+/** Polska odmiana: 1 rok, 2–4 lata (bez 12–14), 5+ lat */
+const yearsUnit = years === 1 ? 'rok' : years % 10 >= 2 && years % 10 <= 4 && (years % 100 < 12 || years % 100 > 14) ? 'lata' : 'lat';
+
 export const business = {
   name: 'Komplex-Dach Piła',
   shortName: 'Komplex-Dach',
@@ -8,12 +15,15 @@ export const business = {
   city: 'Piła',
   region: 'wielkopolskie',
   country: 'PL',
-  // Środek Piły — współrzędne orientacyjne do obszaru działania
+  // Środek Piły — wyłącznie środek obszaru działania (mapa, GeoCircle). To NIE jest lokalizacja firmy.
   geo: { lat: 53.1514, lon: 16.7378 },
   radiusKm: 100,
-  // UWAGA: do potwierdzenia z właścicielem (brief: „około 25 lat”)
-  experienceYears: 25,
-  experienceLabel: 'około 25 lat',
+  foundingYear: FOUNDING_YEAR,
+  experienceYears: years,
+  /** „25 lat” */
+  experienceLabel: `${years} ${yearsUnit}`,
+  /** „lat” / „lata” — do etykiet typu „lat doświadczenia” */
+  experienceUnit: yearsUnit,
 } as const;
 
 export const nav = [

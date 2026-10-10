@@ -83,7 +83,7 @@ const mosaic = [
       </button>
     </div>
     <figure class="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 px-4 pb-6">
-      <img data-lb-img alt="" class="max-h-[78vh] w-auto max-w-full rounded object-contain" />
+      <img data-lb-img src={full[0]?.src} width={full[0]?.attributes.width} height={full[0]?.attributes.height} alt="" loading="lazy" decoding="async" class="h-auto max-h-[78vh] w-auto max-w-full rounded object-contain" />
       <figcaption data-lb-caption class="text-center text-sm text-white/75"></figcaption>
     </figure>
     <div class="absolute inset-y-0 left-0 flex items-center px-2 sm:px-5">

@@ -19,12 +19,11 @@ import gwozdziarkaWarsztat from '../assets/images/gwozdziarka-milwaukee-warsztat
 import gwozdziarkiDwie from '../assets/images/gwozdziarki-milwaukee-dwie-walizki.jpg';
 import lukarnaStaryDach from '../assets/images/lukarna-obrobka-stary-dach.jpg';
 import retuszBudynek from '../assets/images/retusz-budynek-elewacja-metalowa.png';
-import retuszKominy from '../assets/images/retusz-obrobki-kominow.png';
 
 export type Photo = {
   src: ImageMetadata;
   alt: string;
-  /** true = obraz poprawiony cyfrowo (ChatGPT) — tylko dekoracyjnie, zawsze z adnotacją */
+  /** true = obraz przetworzony cyfrowo (AI, ChatGPT) — tylko dekoracyjnie, zawsze z widoczną adnotacją; nigdy jako OG ani w danych strukturalnych */
   retouched?: boolean;
 };
 
@@ -47,8 +46,7 @@ export const photos = {
   gwozdziarkaWarsztat: { src: gwozdziarkaWarsztat, alt: 'Gwoździarka Milwaukee M18 FUEL na stole w warsztacie' },
   gwozdziarkiDwie: { src: gwozdziarkiDwie, alt: 'Dwie gwoździarki Milwaukee FUEL w walizkach na stole warsztatowym' },
   lukarnaStaryDach: { src: lukarnaStaryDach, alt: 'Lukarna z obróbką blacharską na starym dachu z dachówki ceramicznej' },
-  retuszBudynek: { src: retuszBudynek, alt: 'Budynek z ciemną elewacją z blachy o zmierzchu — kadr poprawiony cyfrowo', retouched: true },
-  retuszKominy: { src: retuszKominy, alt: 'Dwie obróbki kominów z blachy: czerwona i grafitowa — kadr poprawiony cyfrowo', retouched: true },
+  retuszBudynek: { src: retuszBudynek, alt: 'Budynek z ciemną elewacją z blachy o zmierzchu — kadr przetworzony cyfrowo (AI), ilustracja', retouched: true },
 } satisfies Record<string, Photo>;
 
 export type PhotoKey = keyof typeof photos;
