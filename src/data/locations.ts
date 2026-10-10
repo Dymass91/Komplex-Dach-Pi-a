@@ -7,6 +7,14 @@ import { business } from './site';
  * Strona lokalna powstaje tylko dla miejscowości z uzupełnionym polem `page` —
  * z unikalną treścią, a nie z podmienioną nazwą miasta. Aby dodać kolejną stronę,
  * dopisz `page` z własnym opisem i pytaniami.
+ *
+ * INDEKSOWANIE: każda miejscowość ma jawne `indexable`. Strony z `indexable: false`
+ * działają normalnie, ale mają `noindex, follow` (także po włączeniu indeksowania
+ * całej witryny), nie trafiają do sitemapy ani nie mają danych FAQPage.
+ * `indexable: true` ustawiaj ręcznie i tylko wtedy, gdy strona zawiera zweryfikowane,
+ * pomocne informacje odróżniające ją od innych stron lokalnych (np. potwierdzone
+ * przez właściciela prace w okolicy, sprawdzone lokalne uwarunkowania dachowe).
+ * Zdjęcie z lokalnej realizacji jest cenne, ale nie jest wymagane.
  */
 export type Location = {
   name: string;
@@ -19,6 +27,8 @@ export type Location = {
   voivodeship: 'wielkopolskie' | 'zachodniopomorskie' | 'kujawsko-pomorskie' | 'pomorskie';
   /** Etykieta na mapie */
   major?: boolean;
+  /** Czy strona lokalna może być indeksowana — zawsze jawnie, domyślnie false */
+  indexable: boolean;
   page?: {
     metaDescription: string;
     intro: string[];
@@ -29,12 +39,12 @@ export type Location = {
 
 export const locations: Location[] = [
   {
-    name: 'Wałcz', slug: 'walcz', locative: 'Wałczu', lat: 53.274, lon: 16.471, county: 'wałecki', voivodeship: 'zachodniopomorskie', major: true,
+    name: 'Wałcz', slug: 'walcz', locative: 'Wałczu', lat: 53.274, lon: 16.471, county: 'wałecki', voivodeship: 'zachodniopomorskie', major: true, indexable: false,
     page: {
       metaDescription: 'Dekarz Wałcz: wykonanie dachów, naprawy przecieków, przeglądy i odśnieżanie. Komplex-Dach z Piły — zadzwoń: 601 568 841.',
       intro: [
-        'Wałcz leży na północny zachód od Piły, już po stronie województwa zachodniopomorskiego — to jedno z miast, do których dojeżdżamy najczęściej poza Piłą.',
-        'Do Wałcza i okolicznych miejscowości przyjeżdżamy zarówno do nowych dachów, jak i do napraw, przeglądów czy odśnieżania. Przy jednym wyjeździe często łączymy kilka zleceń z okolicy — dlatego warto zadzwonić z wyprzedzeniem i opisać, czego potrzebujesz.',
+        'Wałcz leży na północny zachód od Piły, już po stronie województwa zachodniopomorskiego.',
+        'Wałcz i okoliczne miejscowości mieszczą się w naszym obszarze działania — zarówno przy nowych dachach, jak i przy naprawach, przeglądach czy odśnieżaniu. Zakres prac i termin ustalamy telefonicznie: zadzwoń i opisz, czego potrzebujesz.',
       ],
       nearby: ['Tuczno', 'Mirosławiec', 'Człopa'],
       faq: [
@@ -44,7 +54,7 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Złotów', slug: 'zlotow', locative: 'Złotowie', lat: 53.363, lon: 17.041, county: 'złotowski', voivodeship: 'wielkopolskie', major: true,
+    name: 'Złotów', slug: 'zlotow', locative: 'Złotowie', lat: 53.363, lon: 17.041, county: 'złotowski', voivodeship: 'wielkopolskie', major: true, indexable: false,
     page: {
       metaDescription: 'Dekarz Złotów: pokrycia dachowe, naprawy dachów, przeglądy, okna dachowe. Komplex-Dach z Piły — tel. 601 568 841.',
       intro: [
@@ -59,12 +69,12 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Chodzież', slug: 'chodziez', locative: 'Chodzieży', lat: 52.995, lon: 16.92, county: 'chodzieski', voivodeship: 'wielkopolskie', major: true,
+    name: 'Chodzież', slug: 'chodziez', locative: 'Chodzieży', lat: 52.995, lon: 16.92, county: 'chodzieski', voivodeship: 'wielkopolskie', major: true, indexable: false,
     page: {
       metaDescription: 'Dekarz Chodzież: wykonanie i naprawa dachów, przeglądy, serwis, odśnieżanie. Komplex-Dach z Piły — zadzwoń: 601 568 841.',
       intro: [
         'Chodzież leży na południowy wschód od Piły. To miasto i okolice, do których mamy blisko.',
-        'Pracujemy tu dla właścicieli domów, firm i wspólnot mieszkaniowych. Zajmujemy się zarówno kompleksowym wykonaniem dachów, jak i naprawami, serwisem oraz przeglądami — także przedzimowymi.',
+        'W Chodzieży i okolicach oferujemy usługi dla właścicieli domów, firm i wspólnot mieszkaniowych: kompleksowe wykonanie dachów, naprawy, serwis oraz przeglądy — także przedzimowe.',
       ],
       nearby: ['Ujście', 'Margonin', 'Szamocin', 'Budzyń'],
       faq: [
@@ -74,7 +84,7 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Trzcianka', slug: 'trzcianka', locative: 'Trzciance', lat: 53.041, lon: 16.454, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie', major: true,
+    name: 'Trzcianka', slug: 'trzcianka', locative: 'Trzciance', lat: 53.041, lon: 16.454, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie', major: true, indexable: false,
     page: {
       metaDescription: 'Dekarz Trzcianka: dachy, naprawy przecieków, obróbki kominów, przeglądy. Komplex-Dach z Piły — tel. 601 568 841.',
       intro: [
@@ -89,27 +99,27 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Czarnków', slug: 'czarnkow', locative: 'Czarnkowie', lat: 52.902, lon: 16.563, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie', major: true,
+    name: 'Czarnków', slug: 'czarnkow', locative: 'Czarnkowie', lat: 52.902, lon: 16.563, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie', major: true, indexable: false,
     page: {
       metaDescription: 'Dekarz Czarnków: wykonanie dachów, naprawy, przeglądy, docieplenia poddaszy. Komplex-Dach z Piły — zadzwoń: 601 568 841.',
       intro: [
         'Czarnków, siedziba powiatu czarnkowsko-trzcianeckiego, leży nad Notecią, na południe od Piły.',
-        'Obsługujemy Czarnków i okoliczne miejscowości: wykonujemy dachy, naprawiamy przecieki, ocieplamy poddasza i wykonujemy przeglądy. Przy dalszych wyjazdach terminy ustalamy z wyprzedzeniem — najlepiej zadzwonić i opisać zakres prac.',
+        'Obsługujemy Czarnków i okoliczne miejscowości: wykonujemy dachy, naprawiamy przecieki, ocieplamy poddasza i wykonujemy przeglądy. Termin i zakres prac ustalamy telefonicznie — najlepiej zadzwonić i opisać, czego potrzebujesz.',
       ],
       nearby: ['Wieleń', 'Lubasz', 'Trzcianka'],
       faq: [
-        { q: 'Czy dojeżdżacie do Czarnkowa na przegląd dachu?', a: 'Tak. Przegląd możemy połączyć z innymi zleceniami w okolicy — zadzwoń, by ustalić termin.' },
+        { q: 'Czy dojeżdżacie do Czarnkowa na przegląd dachu?', a: 'Tak. Zadzwoń pod numer 601 568 841, aby ustalić termin i zakres przeglądu.' },
         { q: 'Czy wykonujecie docieplenie poddasza w Czarnkowie?', a: 'Tak, docieplenie poddasza wykonujemy samodzielnie lub razem z pracami dachowymi.' },
       ],
     },
   },
   {
-    name: 'Wągrowiec', slug: 'wagrowiec', locative: 'Wągrowcu', lat: 52.809, lon: 17.199, county: 'wągrowiecki', voivodeship: 'wielkopolskie', major: true,
+    name: 'Wągrowiec', slug: 'wagrowiec', locative: 'Wągrowcu', lat: 52.809, lon: 17.199, county: 'wągrowiecki', voivodeship: 'wielkopolskie', major: true, indexable: false,
     page: {
       metaDescription: 'Dekarz Wągrowiec: pokrycia dachowe, naprawy i serwis dachów, odśnieżanie. Komplex-Dach z Piły — tel. 601 568 841.',
       intro: [
-        'Wągrowiec leży na południowy wschód od Piły. To dalszy kierunek w naszym obszarze działania, dlatego prace planujemy z wyprzedzeniem.',
-        'W Wągrowcu i okolicach realizujemy przede wszystkim większe prace — wykonanie i wymianę dachów, serwis dachów obiektów firmowych i wspólnot — ale warto zadzwonić także z mniejszą sprawą. Powiemy, kiedy możemy przyjechać.',
+        'Wągrowiec leży na południowy wschód od Piły — to jeden z dalszych kierunków w naszym obszarze działania.',
+        'W Wągrowcu i okolicach oferujemy pełen zakres usług dachowych: wykonanie i wymianę dachów, serwis i przeglądy, a także naprawy. Zadzwoń i opisz zakres prac — powiemy, kiedy możemy przyjechać.',
       ],
       nearby: ['Gołańcz', 'Margonin', 'Mieścisko'],
       faq: [
@@ -119,40 +129,40 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Szczecinek', slug: 'szczecinek', locative: 'Szczecinku', lat: 53.708, lon: 16.699, county: 'szczecinecki', voivodeship: 'zachodniopomorskie', major: true,
+    name: 'Szczecinek', slug: 'szczecinek', locative: 'Szczecinku', lat: 53.708, lon: 16.699, county: 'szczecinecki', voivodeship: 'zachodniopomorskie', major: true, indexable: false,
     page: {
       metaDescription: 'Dekarz Szczecinek: wykonanie dachów, naprawy, przeglądy przed zimą, odśnieżanie. Komplex-Dach z Piły — zadzwoń: 601 568 841.',
       intro: [
-        'Szczecinek leży na północ od Piły, na Pojezierzu Drawskim, w województwie zachodniopomorskim — to jeden z dalszych kierunków w naszym obszarze działania.',
-        'Do Szczecinka i okolic przyjeżdżamy przede wszystkim do zaplanowanych prac: wykonania dachów, wymiany pokryć, przeglądów i serwisu. Zimą zajmujemy się też odśnieżaniem dachów. Zadzwoń i opisz zakres — ustalimy termin dojazdu.',
+        'Szczecinek leży na północ od Piły, w województwie zachodniopomorskim — to jeden z dalszych kierunków w naszym obszarze działania.',
+        'W Szczecinku i okolicach oferujemy wykonanie dachów, wymianę pokryć, przeglądy i serwis, a zimą także odśnieżanie dachów. Zadzwoń i opisz zakres — ustalimy termin dojazdu.',
       ],
       nearby: ['Okonek', 'Borne Sulinowo', 'Barwice'],
       faq: [
-        { q: 'Czy dojeżdżacie z Piły do Szczecinka?', a: 'Tak, Szczecinek mieści się w naszym obszarze działania. Prace w tym rejonie planujemy z wyprzedzeniem.' },
-        { q: 'Czy odśnieżacie dachy w Szczecinku?', a: 'Tak. Zimą warto zadzwonić wcześniej, bo po intensywnych opadach zgłoszeń przybywa.' },
+        { q: 'Czy dojeżdżacie z Piły do Szczecinka?', a: 'Tak, Szczecinek mieści się w naszym obszarze działania, w promieniu około 100 km od Piły.' },
+        { q: 'Czy odśnieżacie dachy w Szczecinku?', a: 'Tak, odśnieżamy dachy domów, wspólnot mieszkaniowych i obiektów firmowych. Zadzwoń pod numer 601 568 841.' },
       ],
     },
   },
-  { name: 'Wronki', slug: 'wronki', locative: 'Wronkach', lat: 52.71, lon: 16.38, county: 'szamotulski', voivodeship: 'wielkopolskie', major: true },
-  { name: 'Rogoźno', slug: 'rogozno', locative: 'Rogoźnie', lat: 52.752, lon: 16.993, county: 'obornicki', voivodeship: 'wielkopolskie', major: true },
-  { name: 'Oborniki', slug: 'oborniki', locative: 'Obornikach', lat: 52.648, lon: 16.814, county: 'obornicki', voivodeship: 'wielkopolskie', major: true },
-  { name: 'Nakło nad Notecią', slug: 'naklo-nad-notecia', locative: 'Nakle nad Notecią', lat: 53.142, lon: 17.601, county: 'nakielski', voivodeship: 'kujawsko-pomorskie', major: true },
-  { name: 'Ujście', slug: 'ujscie', locative: 'Ujściu', lat: 53.053, lon: 16.733, county: 'pilski', voivodeship: 'wielkopolskie' },
-  { name: 'Kaczory', slug: 'kaczory', locative: 'Kaczorach', lat: 53.106, lon: 16.893, county: 'pilski', voivodeship: 'wielkopolskie' },
-  { name: 'Krajenka', slug: 'krajenka', locative: 'Krajence', lat: 53.3, lon: 16.985, county: 'złotowski', voivodeship: 'wielkopolskie' },
-  { name: 'Jastrowie', slug: 'jastrowie', locative: 'Jastrowiu', lat: 53.42, lon: 16.818, county: 'złotowski', voivodeship: 'wielkopolskie' },
-  { name: 'Okonek', slug: 'okonek', locative: 'Okonku', lat: 53.54, lon: 16.84, county: 'złotowski', voivodeship: 'wielkopolskie' },
-  { name: 'Wyrzysk', slug: 'wyrzysk', locative: 'Wyrzysku', lat: 53.153, lon: 17.268, county: 'pilski', voivodeship: 'wielkopolskie' },
-  { name: 'Łobżenica', slug: 'lobzenica', locative: 'Łobżenicy', lat: 53.264, lon: 17.254, county: 'pilski', voivodeship: 'wielkopolskie' },
-  { name: 'Szamocin', slug: 'szamocin', locative: 'Szamocinie', lat: 53.029, lon: 17.127, county: 'chodzieski', voivodeship: 'wielkopolskie' },
-  { name: 'Margonin', slug: 'margonin', locative: 'Margoninie', lat: 52.973, lon: 17.093, county: 'chodzieski', voivodeship: 'wielkopolskie' },
-  { name: 'Budzyń', slug: 'budzyn', locative: 'Budzyniu', lat: 52.89, lon: 16.99, county: 'chodzieski', voivodeship: 'wielkopolskie' },
-  { name: 'Wieleń', slug: 'wielen', locative: 'Wieleniu', lat: 52.894, lon: 16.16, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie' },
-  { name: 'Człopa', slug: 'czlopa', locative: 'Człopie', lat: 53.09, lon: 16.12, county: 'wałecki', voivodeship: 'zachodniopomorskie' },
-  { name: 'Tuczno', slug: 'tuczno', locative: 'Tucznie', lat: 53.193, lon: 16.149, county: 'wałecki', voivodeship: 'zachodniopomorskie' },
-  { name: 'Mirosławiec', slug: 'miroslawiec', locative: 'Mirosławcu', lat: 53.343, lon: 16.084, county: 'wałecki', voivodeship: 'zachodniopomorskie' },
-  { name: 'Czaplinek', slug: 'czaplinek', locative: 'Czaplinku', lat: 53.558, lon: 16.233, county: 'drawski', voivodeship: 'zachodniopomorskie' },
-  { name: 'Debrzno', slug: 'debrzno', locative: 'Debrznie', lat: 53.538, lon: 17.235, county: 'człuchowski', voivodeship: 'pomorskie' },
+  { name: 'Wronki', slug: 'wronki', locative: 'Wronkach', lat: 52.71, lon: 16.38, county: 'szamotulski', voivodeship: 'wielkopolskie', major: true, indexable: false },
+  { name: 'Rogoźno', slug: 'rogozno', locative: 'Rogoźnie', lat: 52.752, lon: 16.993, county: 'obornicki', voivodeship: 'wielkopolskie', major: true, indexable: false },
+  { name: 'Oborniki', slug: 'oborniki', locative: 'Obornikach', lat: 52.648, lon: 16.814, county: 'obornicki', voivodeship: 'wielkopolskie', major: true, indexable: false },
+  { name: 'Nakło nad Notecią', slug: 'naklo-nad-notecia', locative: 'Nakle nad Notecią', lat: 53.142, lon: 17.601, county: 'nakielski', voivodeship: 'kujawsko-pomorskie', major: true, indexable: false },
+  { name: 'Ujście', slug: 'ujscie', locative: 'Ujściu', lat: 53.053, lon: 16.733, county: 'pilski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Kaczory', slug: 'kaczory', locative: 'Kaczorach', lat: 53.106, lon: 16.893, county: 'pilski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Krajenka', slug: 'krajenka', locative: 'Krajence', lat: 53.3, lon: 16.985, county: 'złotowski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Jastrowie', slug: 'jastrowie', locative: 'Jastrowiu', lat: 53.42, lon: 16.818, county: 'złotowski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Okonek', slug: 'okonek', locative: 'Okonku', lat: 53.54, lon: 16.84, county: 'złotowski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Wyrzysk', slug: 'wyrzysk', locative: 'Wyrzysku', lat: 53.153, lon: 17.268, county: 'pilski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Łobżenica', slug: 'lobzenica', locative: 'Łobżenicy', lat: 53.264, lon: 17.254, county: 'pilski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Szamocin', slug: 'szamocin', locative: 'Szamocinie', lat: 53.029, lon: 17.127, county: 'chodzieski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Margonin', slug: 'margonin', locative: 'Margoninie', lat: 52.973, lon: 17.093, county: 'chodzieski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Budzyń', slug: 'budzyn', locative: 'Budzyniu', lat: 52.89, lon: 16.99, county: 'chodzieski', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Wieleń', slug: 'wielen', locative: 'Wieleniu', lat: 52.894, lon: 16.16, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie', indexable: false },
+  { name: 'Człopa', slug: 'czlopa', locative: 'Człopie', lat: 53.09, lon: 16.12, county: 'wałecki', voivodeship: 'zachodniopomorskie', indexable: false },
+  { name: 'Tuczno', slug: 'tuczno', locative: 'Tucznie', lat: 53.193, lon: 16.149, county: 'wałecki', voivodeship: 'zachodniopomorskie', indexable: false },
+  { name: 'Mirosławiec', slug: 'miroslawiec', locative: 'Mirosławcu', lat: 53.343, lon: 16.084, county: 'wałecki', voivodeship: 'zachodniopomorskie', indexable: false },
+  { name: 'Czaplinek', slug: 'czaplinek', locative: 'Czaplinku', lat: 53.558, lon: 16.233, county: 'drawski', voivodeship: 'zachodniopomorskie', indexable: false },
+  { name: 'Debrzno', slug: 'debrzno', locative: 'Debrznie', lat: 53.538, lon: 17.235, county: 'człuchowski', voivodeship: 'pomorskie', indexable: false },
 ];
 
 const toRad = (d: number) => (d * Math.PI) / 180;
@@ -185,3 +195,6 @@ export function offsetKm(l: { lat: number; lon: number }) {
 }
 
 export const locationPages = locations.filter((l) => l.page);
+
+/** Ścieżki stron lokalnych wyłączonych z indeksowania (noindex, follow; poza sitemapą) */
+export const noindexLocationPaths = locationPages.filter((l) => !l.indexable).map((l) => `/obszar-dzialania/${l.slug}/`);

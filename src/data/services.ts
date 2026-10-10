@@ -375,7 +375,7 @@ export const services: Service[] = [
       },
       {
         q: 'Jak umówić odśnieżanie?',
-        a: 'Zadzwoń pod 601 568 841. Zimą zgłoszeń przybywa po intensywnych opadach — warto zadzwonić wcześniej.',
+        a: 'Zadzwoń pod 601 568 841 i opisz budynek oraz dach — ustalimy szczegóły i termin.',
       },
     ],
     related: ['przeglad-dachu-przed-zima', 'serwis-dachu', 'naprawa-dachu'],

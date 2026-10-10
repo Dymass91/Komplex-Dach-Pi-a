@@ -3,7 +3,6 @@
 @theme {
   --font-sans: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --font-hand: 'Caveat', cursive;
 
   --color-ink: #070a10;
   --color-night: #0b111b;

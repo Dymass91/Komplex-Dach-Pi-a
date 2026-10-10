@@ -34,8 +34,18 @@ Oryginalne zdjęcia (katalog główny i `Zdjecia obrobione przez chatgpt/`) **ni
 ### Dodanie strony lokalnej
 
 W `src/data/locations.ts` uzupełnij pole `page` danej miejscowości **unikalną** treścią
-(opis, okoliczne miejscowości, pytania). Strona `/obszar-dzialania/<slug>/` wygeneruje się automatycznie
-i trafi do mapy strony, stopki i linkowania. Nie kopiuj tekstów z podmienioną nazwą miasta.
+(opis, okoliczne miejscowości, pytania). Strona `/obszar-dzialania/<slug>/` wygeneruje się automatycznie.
+Nie kopiuj tekstów z podmienioną nazwą miasta.
+
+Każda miejscowość ma jawne pole `indexable` (domyślnie `false`). Strona z `indexable: false`:
+- działa normalnie i jest podlinkowana z huba `/obszar-dzialania/`,
+- ma `noindex, follow` — **także po włączeniu `ALLOW_INDEXING`** (meta + nagłówek `X-Robots-Tag`),
+- nie trafia do `sitemap-index.xml` i nie ma danych FAQPage,
+- zachowuje własny canonical (bez przekierowania na hub).
+
+Ustaw `indexable: true` ręcznie, dopiero gdy strona ma zweryfikowane, pomocne informacje odróżniające ją od innych
+stron lokalnych (np. potwierdzone przez właściciela prace w okolicy, sprawdzone lokalne uwarunkowania dachowe).
+Zdjęcie z lokalnej realizacji jest cenne, ale niewymagane. Obecnie wszystkie 7 stron ma `indexable: false`.
 
 ## SEO i indeksowanie
 

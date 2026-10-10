@@ -3,7 +3,9 @@ import { Image, Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import PhoneLink from '../components/PhoneLink.astro';
-import Drawing from '../components/Drawing.astro';
+import type { ComponentProps } from 'astro/types';
+import BlueprintCard from '../components/BlueprintCard.astro';
+import BuildingBlueprint from '../components/BuildingBlueprint.astro';
 import Gallery from '../components/Gallery.astro';
 import AreaMap from '../components/AreaMap.astro';
 import Faq from '../components/Faq.astro';
@@ -17,6 +19,14 @@ const featured = ['wykonanie-dachow', 'naprawa-dachu', 'przeglad-dachu', 'dociep
   (s) => getService(s)!,
 );
 const more = services.filter((s) => !featured.includes(s));
+const blueprintFor: Record<string, ComponentProps<typeof BlueprintCard>['service']> = {
+  'wykonanie-dachow': 'wykonanie',
+  'naprawa-dachu': 'naprawy',
+  'przeglad-dachu': 'przeglady',
+  'docieplenie-poddasza': 'ocieplanie',
+  'montaz-okien-dachowych': 'okna',
+  'odsniezanie-dachow': 'odsniezanie',
+};
 
 const why = [
   { icon: 'badge', title: 'Doświadczenie', text: `${business.experienceLabel} przy dachach` },
@@ -86,10 +96,10 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
 
     <div class="container-x relative flex flex-1 flex-col justify-end pb-10 pt-32 md:justify-center md:pb-12 md:pt-36" data-hero-content>
       <p class="eyebrow eyebrow-light max-w-[22rem] leading-relaxed" data-hero-fade>Profesjonalne usługi dekarskie w Pile i okolicach</p>
-      <h1 id="hero-title" class="h-display mt-5 text-[clamp(3rem,8.4vw,6.6rem)]">
+      <h1 id="hero-title" class="h-display mt-5 whitespace-nowrap text-[clamp(2.25rem,10.5vw,5.5rem)]">
         <span data-hero-line><span>Dachy,</span></span>
-        <span data-hero-line><span>które dają</span></span>
-        <span data-hero-line><span class="text-blue">spokój</span></span>
+        <span data-hero-line><span>które budzą</span></span>
+        <span data-hero-line><span class="text-blue">podziw.</span></span>
       </h1>
       <p class="mt-6 max-w-[30rem] text-[1.05rem] leading-relaxed text-white/80" data-hero-fade data-hero-rise>
         Kompleksowe wykonanie dachów, naprawy, przeglądy, serwis i wszystkie niezbędne prace dekarskie. Z dbałością o każdy
@@ -120,11 +130,23 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
       </dl>
     </div>
 
-    <!-- Odręczny dopisek, jak w referencji -->
-    <p class="pointer-events-none absolute right-[6%] top-[22%] hidden rotate-[-6deg] text-right font-hand text-[2.4rem] leading-[0.95] text-white/90 lg:block" data-hero-fade aria-hidden="true">
-      Rzemiosło<br />dekarskie<br />z Piły
-      <svg class="ml-auto mt-2 w-20 text-sky" viewBox="0 0 80 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 4c20 18 46 22 70 14M62 10l10 8-12 4" /></svg>
-    </p>
+    <!-- Architektoniczna adnotacja redakcyjna -->
+    <div class="pointer-events-none absolute right-[5%] top-[24%] hidden xl:block" data-hero-fade aria-hidden="true">
+      <div class="flex items-start gap-4">
+        <svg class="mt-[0.3rem] h-12 w-12 shrink-0 text-sky" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M0 0.5h48M0.5 0v48" />
+          <path d="M6 30 24 12l18 18" stroke-opacity="0.7" />
+          <circle cx="24" cy="12" r="1.5" fill="currentColor" stroke="none" />
+        </svg>
+        <p class="font-mono text-[0.68rem] font-medium uppercase leading-[1.9] tracking-[0.28em] text-white/85">
+          Rzemiosło dekarskie<br />
+          <span class="text-white/50">Piła / Wielkopolska</span>
+        </p>
+      </div>
+      <div class="ml-16 mt-4 flex items-center gap-2 font-mono text-[0.58rem] uppercase tracking-[0.24em] text-white/35">
+        <span class="h-px w-10 bg-sky/70"></span>53°09′N · 16°44′E
+      </div>
+    </div>
     <p class="absolute bottom-4 right-5 hidden font-mono text-[0.58rem] uppercase tracking-[0.16em] text-white/35 md:block">
       Fot. 01 — kadr poprawiony cyfrowo, ilustracyjny
     </p>
@@ -147,17 +169,11 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
             <li data-reveal>
               <a href={`/uslugi/${s.slug}/`} class="group block">
                 <div class="relative aspect-[4/3] overflow-hidden rounded-md bg-graphite">
-                  {s.photo ? (
-                    <Image
-                      src={photos[s.photo].src}
-                      alt={photos[s.photo].alt}
-                      widths={[320, 520]}
-                      sizes="(min-width: 1024px) 16vw, (min-width: 640px) 30vw, 46vw"
-                      class="h-full w-full object-cover transition-transform duration-[1.1s] ease-[var(--ease-out-expo)] group-hover:scale-[1.07]"
-                    />
-                  ) : (
-                    <Drawing name={s.drawing} label={`Rysunek techniczny: ${s.name}`} class="transition-transform duration-[1.1s] ease-[var(--ease-out-expo)] group-hover:scale-[1.07]" />
-                  )}
+                  <BlueprintCard
+                    service={blueprintFor[s.slug]}
+                    label={`Rysunek techniczny: ${s.name}`}
+                    class="transition-transform duration-[1.1s] ease-[var(--ease-out-expo)] group-hover:scale-[1.07]"
+                  />
                   <span class="absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-blue transition-transform duration-500 group-hover:scale-x-100" />
                 </div>
                 <h3 class="mt-4 text-[0.98rem] font-bold leading-snug">
@@ -390,19 +406,19 @@ const majorTowns = [{ name: 'Piła', slug: '' }, ...locations.filter((l) => l.ma
       </div>
       <ul class="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <li class="overflow-hidden rounded-lg bg-white shadow-[0_1px_0_rgba(7,10,16,0.06)]" data-reveal>
-          <div class="aspect-[16/10] overflow-hidden"><Image src={photos.domWBudowie.src} alt={photos.domWBudowie.alt} widths={[480, 680]} sizes="(min-width:1024px) 24vw, (min-width:640px) 48vw, 100vw" class="h-full w-full object-cover" /></div>
+          <div class="aspect-[16/10] overflow-hidden"><BuildingBlueprint type="dom" label="Rysunek techniczny: dom jednorodzinny z dachem dwuspadowym" /></div>
           <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Domy jednorodzinne</h3><p class="mt-1 text-xs text-ink/60 sm:text-sm">Nowe dachy, wymiana pokrycia, naprawy</p></div>
         </li>
         <li class="overflow-hidden rounded-lg bg-white shadow-[0_1px_0_rgba(7,10,16,0.06)]" data-reveal>
-          <div class="grid aspect-[16/10] place-items-center bg-graphite text-sky grid-lines"><Icon name="building" size={64} stroke={1} /></div>
+          <div class="aspect-[16/10] overflow-hidden"><BuildingBlueprint type="usługowy" label="Rysunek techniczny: nowoczesny budynek usługowy" /></div>
           <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Firmy i budynki usługowe</h3><p class="mt-1 text-xs text-ink/60 sm:text-sm">Wykonanie, serwis, przeglądy</p></div>
         </li>
         <li class="overflow-hidden rounded-lg bg-white shadow-[0_1px_0_rgba(7,10,16,0.06)]" data-reveal>
-          <div class="aspect-[16/10] overflow-hidden"><Image src={photos.budowaWielorodzinny.src} alt={photos.budowaWielorodzinny.alt} widths={[480, 680]} sizes="(min-width:1024px) 24vw, (min-width:640px) 48vw, 100vw" class="h-full w-full object-cover" /></div>
+          <div class="aspect-[16/10] overflow-hidden"><BuildingBlueprint type="wielorodzinny" label="Rysunek techniczny: wielokondygnacyjny budynek mieszkalny z balkonami" /></div>
           <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Wspólnoty mieszkaniowe</h3><p class="mt-1 text-xs text-ink/60 sm:text-sm">Dachy budynków wielorodzinnych</p></div>
         </li>
         <li class="overflow-hidden rounded-lg bg-white shadow-[0_1px_0_rgba(7,10,16,0.06)]" data-reveal>
-          <div class="grid aspect-[16/10] place-items-center bg-graphite text-sky grid-lines"><Icon name="factory" size={64} stroke={1} /></div>
+          <div class="aspect-[16/10] overflow-hidden"><BuildingBlueprint type="hala" label="Rysunek techniczny: hala przemysłowa z bramą segmentową" /></div>
           <div class="p-4 sm:p-5"><h3 class="text-sm font-bold sm:text-base">Obiekty komercyjne i przemysłowe</h3><p class="mt-1 text-xs text-ink/60 sm:text-sm">Dachy hal, magazynów, odśnieżanie</p></div>
         </li>
       </ul>

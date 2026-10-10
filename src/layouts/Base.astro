@@ -2,8 +2,6 @@
 import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '@fontsource/jetbrains-mono/latin-ext-500.css';
-import '@fontsource/caveat/latin-600.css';
-import '@fontsource/caveat/latin-ext-600.css';
 import '../styles/global.css';
 
 import { getImage } from 'astro:assets';
@@ -23,13 +21,17 @@ interface Props {
   ogImage?: ImageMetadata;
   breadcrumbs?: Crumb[];
   jsonLd?: Record<string, unknown>[];
+  /** Strona wyłączona z indeksowania niezależnie od ALLOW_INDEXING (noindex, follow) */
+  noindex?: boolean;
 }
 
-const { title, description, ogImage = photos.retuszBudynek.src, breadcrumbs, jsonLd = [] } = Astro.props;
+const { title, description, ogImage = photos.retuszBudynek.src, breadcrumbs, jsonLd = [], noindex = false } = Astro.props;
 
 const site = Astro.site!;
 const canonical = new URL(Astro.url.pathname, site).href;
 const allowIndexing = process.env.ALLOW_INDEXING === 'true';
+// Wersja demo: cała witryna noindex, nofollow. Produkcja: tylko strony z `noindex` dostają noindex, follow.
+const robots = !allowIndexing ? 'noindex, nofollow' : noindex ? 'noindex, follow' : null;
 
 const og = await getImage({ src: ogImage, width: 1200, format: 'jpg', quality: 80 });
 const ogUrl = new URL(og.src, site).href;
@@ -92,7 +94,7 @@ const schema = JSON.stringify({ '@context': 'https://schema.org', '@graph': grap
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {!allowIndexing && <meta name="robots" content="noindex, nofollow" />}
+    {robots && <meta name="robots" content={robots} />}
     <meta name="theme-color" content="#070a10" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />

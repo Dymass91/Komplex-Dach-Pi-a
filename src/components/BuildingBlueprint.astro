@@ -1,0 +1,251 @@
+---
+// Rysunki „blueprint” budynków dla sekcji „Różne typy obiektów”.
+// Wspólny rzut aksonometryczny (te same osie dla wszystkich czterech), linie 1px niezależnie od skali.
+interface Props {
+  type: 'dom' | 'usługowy' | 'wielorodzinny' | 'hala';
+  label: string;
+  class?: string;
+}
+const { type, label, class: cls = '' } = Astro.props;
+const uid = `bb-${['dom', 'usługowy', 'wielorodzinny', 'hala'].indexOf(type)}`;
+
+type V3 = [number, number, number];
+type Kind = 'edge' | 'detail' | 'faint' | 'accent' | 'dim' | 'guide';
+
+// Konfiguracja rzutu per budynek: skala i punkt narożnika frontowego
+const cfg = {
+  dom: { s: 20, ox: 226, oy: 206 },
+  usługowy: { s: 18.5, ox: 214, oy: 210 },
+  wielorodzinny: { s: 15, ox: 233, oy: 222 },
+  hala: { s: 15.5, ox: 227, oy: 204 },
+}[type];
+
+// Osie: x — w lewo w głąb, z — w prawo w głąb, y — w górę
+const L = [-0.94, -0.17];
+const R = [0.97, -0.12];
+const P = ([x, y, z]: V3) => {
+  const px = cfg.ox + (x * L[0] + z * R[0]) * cfg.s;
+  const py = cfg.oy + (x * L[1] + z * R[1] - y) * cfg.s;
+  return `${px.toFixed(1)} ${py.toFixed(1)}`;
+};
+const paths: Record<Kind, string[]> = { edge: [], detail: [], faint: [], accent: [], dim: [], guide: [] };
+const fills: { d: string; o: number }[] = [];
+const pl = (k: Kind, ...pts: V3[]) => paths[k].push(`M${pts.map(P).join('L')}`);
+const pg = (k: Kind, ...pts: V3[]) => paths[k].push(`M${pts.map(P).join('L')}Z`);
+const fill = (o: number, ...pts: V3[]) => fills.push({ d: `M${pts.map(P).join('L')}Z`, o });
+// Prostokąt na ścianie lewej (z = const) lub prawej (x = const)
+const rectL = (k: Kind, x0: number, x1: number, y0: number, y1: number, z = 0) => pg(k, [x0, y0, z], [x1, y0, z], [x1, y1, z], [x0, y1, z]);
+const rectR = (k: Kind, z0: number, z1: number, y0: number, y1: number, x = 0) => pg(k, [x, y0, z0], [x, y0, z1], [x, y1, z1], [x, y1, z0]);
+const winL = (x0: number, x1: number, y0: number, y1: number, z = 0) => {
+  rectL('detail', x0, x1, y0, y1, z);
+  pl('faint', [(x0 + x1) / 2, y0, z], [(x0 + x1) / 2, y1, z]);
+};
+const winR = (z0: number, z1: number, y0: number, y1: number, x = 0) => {
+  rectR('detail', z0, z1, y0, y1, x);
+  pl('faint', [x, y0, (z0 + z1) / 2], [x, y1, (z0 + z1) / 2]);
+};
+// Prostopadłościan: dwie widoczne ściany + dach (bez linii ukrytych)
+const box = (w: number, d: number, h: number, x = 0, z = 0, y = 0, k: Kind = 'edge') => {
+  pg(k, [x, y, z], [x + w, y, z], [x + w, y + h, z], [x, y + h, z]);
+  pg(k, [x, y, z], [x, y, z + d], [x, y + h, z + d], [x, y + h, z]);
+  pl(k, [x + w, y + h, z], [x + w, y + h, z + d], [x, y + h, z + d]);
+};
+// Linie konstrukcyjne i wymiarowanie (wspólne)
+const guides = (w: number, d: number, h: number) => {
+  pl('guide', [w + 4, 0, 0], [-2.5, 0, 0]);
+  pl('guide', [0, 0, -2], [0, 0, d + 3]);
+  pl('guide', [0, h, -1.6], [0, h, 0]);
+  pl('dim', [0, 0, d + 1.4], [0, h, d + 1.4]);
+  pl('dim', [0, 0, d + 1.1], [0, 0, d + 1.7]);
+  pl('dim', [0, h, d + 1.1], [0, h, d + 1.7]);
+  pl('dim', [0, 0, -1.2], [w, 0, -1.2]);
+  pl('dim', [0, 0, -0.9], [0, 0, -1.5]);
+  pl('dim', [w, 0, -0.9], [w, 0, -1.5]);
+};
+
+if (type === 'dom') {
+  const w = 10, d = 7, h = 3, ridge = 5.9, o = 0.5;
+  const slopeY = (z: number) => h + (ridge - h) * (z / (d / 2));
+  fill(0.1, [0, 0, 0], [w, 0, 0], [w, h, 0], [0, h, 0]);
+  fill(0.05, [0, 0, 0], [0, 0, d], [0, h, d], [0, ridge, d / 2], [0, h, 0]);
+  fill(0.14, [-o, h - 0.25, -0.45], [w + o, h - 0.25, -0.45], [w + o, ridge, d / 2], [-o, ridge, d / 2]);
+  pg('edge', [0, 0, 0], [w, 0, 0], [w, h, 0], [0, h, 0]);
+  pg('edge', [0, 0, 0], [0, 0, d], [0, h, d], [0, ridge, d / 2], [0, h, 0]);
+  pg('accent', [-o, h - 0.25, -0.45], [w + o, h - 0.25, -0.45], [w + o, ridge, d / 2], [-o, ridge, d / 2]);
+  pl('accent', [-o, h - 0.25, d + 0.45], [-o, ridge, d / 2]);
+  // dachówki
+  for (let i = 1; i < 9; i++) {
+    const t = i / 9;
+    const z = -0.45 + (d / 2 + 0.45) * t;
+    pl('faint', [-o, h - 0.25 + (ridge - h + 0.25) * t, z], [w + o, h - 0.25 + (ridge - h + 0.25) * t, z]);
+  }
+  for (let x = 0; x <= w; x += 0.5) pl('faint', [x, h - 0.25, -0.45], [x, ridge, d / 2]);
+  // lukarny
+  for (const xa of [2.2, 5.6]) {
+    const zf = 1.3, ys = slopeY(zf), yt = ys + 1.1, xb = xa + 1.6;
+    const zBack = ((yt - h) / (ridge - h)) * (d / 2);
+    fill(0.25, [xa, ys, zf], [xb, ys, zf], [xb, yt, zf], [(xa + xb) / 2, yt + 0.7, zf], [xa, yt, zf]);
+    pg('edge', [xa, ys, zf], [xb, ys, zf], [xb, yt, zf], [(xa + xb) / 2, yt + 0.7, zf], [xa, yt, zf]);
+    pl('edge', [(xa + xb) / 2, yt + 0.7, zf], [(xa + xb) / 2, yt + 0.7, zBack + 0.4]);
+    pl('detail', [xa, yt, zf], [xa, yt, zBack]);
+    winL(xa + 0.3, xb - 0.3, ys + 0.2, yt - 0.15, zf);
+  }
+  // komin
+  box(0.8, 0.8, 1.4, 6, 2.9, slopeY(2.9) - 0.2, 'edge');
+  // okna i drzwi
+  winL(0.9, 2.1, 1, 2.2); winL(3.2, 4.4, 1, 2.2); winL(6.4, 7.6, 1, 2.2);
+  rectL('detail', 8.4, 9.3, 0, 2.2); pl('faint', [8.55, 0, 0], [8.55, 2.05, 0], [9.15, 2.05, 0]);
+  winR(1, 2.4, 1, 2.2); winR(4.6, 6, 1, 2.2); winR(2.8, 4.2, 3.4, 4.6);
+  // rynna i rura spustowa
+  pl('detail', [-o, h - 0.45, -0.55], [w + o, h - 0.45, -0.55]);
+  pl('detail', [-0.15, h - 0.45, -0.5], [-0.15, 0.1, -0.5]);
+  pl('faint', [w, 0.4, 0], [0, 0.4, 0], [0, 0.4, d]);
+  guides(w, d, h);
+}
+
+if (type === 'usługowy') {
+  const w = 10, d = 8, h = 5.4;
+  fill(0.1, [0, 0, 0], [w, 0, 0], [w, h, 0], [0, h, 0]);
+  fill(0.05, [0, 0, 0], [0, 0, d], [0, h, d], [0, h, 0]);
+  box(w, d, h);
+  pg('accent', [0, h, 0], [w, h, 0], [w, h, d], [0, h, d]);
+  pl('detail', [w, h - 0.35, 0], [0, h - 0.35, 0], [0, h - 0.35, d]);
+  // strop między kondygnacjami
+  pl('edge', [w, 2.7, 0], [0, 2.7, 0], [0, 2.7, d]);
+  pl('detail', [w, 2.95, 0], [0, 2.95, 0], [0, 2.95, d]);
+  // fasada szklana — słupki i rygle
+  for (let x = 1; x < w; x += 1) { pl('faint', [x, 0, 0], [x, 2.7, 0]); pl('faint', [x, 2.95, 0], [x, h - 0.35, 0]); }
+  for (let z = 1; z < d; z += 1) { pl('faint', [0, 0, z], [0, 2.7, z]); pl('faint', [0, 2.95, z], [0, h - 0.35, z]); }
+  pl('faint', [w, 1, 0], [0, 1, 0], [0, 1, d]);
+  pl('faint', [w, 4.1, 0], [0, 4.1, 0], [0, 4.1, d]);
+  // wejście z daszkiem
+  rectL('detail', 3.6, 5.2, 0, 2.2);
+  pl('faint', [4.4, 0, 0], [4.4, 2.2, 0]);
+  pg('edge', [3, 2.45, 0], [5.8, 2.45, 0], [5.8, 2.45, -1.3], [3, 2.45, -1.3]);
+  pl('detail', [3, 2.3, -1.3], [5.8, 2.3, -1.3]);
+  // lamele na piętrze (prawa ściana)
+  for (let z = 0.5; z < d; z += 1) pl('detail', [0, 3.1, z], [-0.35, 3.1, z], [-0.35, h - 0.5, z], [0, h - 0.5, z]);
+  // urządzenie na dachu
+  box(1.8, 1.4, 0.7, 5, 3, h, 'detail');
+  guides(w, d, h);
+}
+
+if (type === 'wielorodzinny') {
+  const w = 12, d = 7, h = 8;
+  fill(0.1, [0, 0, 0], [w, 0, 0], [w, h, 0], [0, h, 0]);
+  fill(0.05, [0, 0, 0], [0, 0, d], [0, h, d], [0, h, 0]);
+  pg('edge', [0, 0, 0], [w, 0, 0], [w, h, 0], [0, h, 0]);
+  pg('edge', [0, 0, 0], [0, 0, d], [0, h, d], [0, h, 0]);
+  for (let f = 1; f < 4; f++) pl('faint', [w, f * 2, 0], [0, f * 2, 0], [0, f * 2, d]);
+  // dach kopertowy
+  const o = 0.45, E1: V3 = [-o, h, -o], E2: V3 = [w + o, h, -o], E3: V3 = [-o, h, d + o];
+  const R1: V3 = [2.6, h + 1.9, d / 2], R2: V3 = [w - 2.6, h + 1.9, d / 2];
+  fill(0.14, E1, E2, R2, R1);
+  fill(0.08, E1, R1, E3);
+  pg('accent', E1, E2, R2, R1);
+  pl('accent', E1, E3, R1);
+  for (let i = 1; i < 6; i++) { const t = i / 6; pl('faint', [-o + (2.6 + o) * t, h + 1.9 * t, -o + (d / 2 + o) * t], [w + o - (2.6 + o) * t, h + 1.9 * t, -o + (d / 2 + o) * t]); }
+  box(0.6, 0.6, 1.1, 4.2, 2.6, h + 1.3, 'detail');
+  box(0.6, 0.6, 1.1, 8.4, 2.6, h + 1.3, 'detail');
+  // okna (lewa ściana) i klatki balkonowe
+  const balconyBays = [[3.9, 5.7], [7.5, 9.3]];
+  for (let f = 0; f < 4; f++) {
+    const y0 = f * 2 + 0.55, y1 = f * 2 + 1.55;
+    for (const x0 of [0.8, 2.3, 6.1, 10.1]) winL(x0, x0 + 0.9, y0, y1);
+    for (const [a, b] of balconyBays) {
+      winL(a + 0.4, b - 0.4, y0 - 0.2, y1 + 0.1);
+      if (f > 0) {
+        const yb = f * 2, z = -0.9;
+        pg('edge', [a, yb, 0], [b, yb, 0], [b, yb, z], [a, yb, z]);
+        rectL('detail', a, b, yb, yb + 0.9, z);
+        pl('detail', [a, yb + 0.9, z], [a, yb + 0.9, 0]);
+        for (let x = a + 0.3; x < b; x += 0.3) pl('faint', [x, yb, z], [x, yb + 0.9, z]);
+      }
+    }
+    for (const z0 of [0.9, 2.6, 4.3, 5.6]) winR(z0, z0 + 0.8, y0, y1);
+  }
+  // wejście
+  rectR('detail', 3, 4, 0, 1.6);
+  pg('detail', [0, 1.8, 2.7], [0, 1.8, 4.3], [-0.8, 1.8, 4.3], [-0.8, 1.8, 2.7]);
+  guides(w, d, h);
+}
+
+if (type === 'hala') {
+  const w = 13, d = 9, h = 4.6, ridge = 5.6;
+  fill(0.1, [0, 0, 0], [w, 0, 0], [w, h, 0], [0, h, 0]);
+  fill(0.05, [0, 0, 0], [0, 0, d], [0, h, d], [0, ridge, d / 2], [0, h, 0]);
+  fill(0.14, [0, h, 0], [w, h, 0], [w, ridge, d / 2], [0, ridge, d / 2]);
+  pg('edge', [0, 0, 0], [w, 0, 0], [w, h, 0], [0, h, 0]);
+  pg('edge', [0, 0, 0], [0, 0, d], [0, h, d], [0, ridge, d / 2], [0, h, 0]);
+  pg('accent', [-0.2, h + 0.05, -0.25], [w + 0.2, h + 0.05, -0.25], [w + 0.2, ridge + 0.05, d / 2], [-0.2, ridge + 0.05, d / 2]);
+  pl('accent', [-0.2, h + 0.05, d + 0.25], [-0.2, ridge + 0.05, d / 2]);
+  // świetlik kalenicowy
+  pg('detail', [1, ridge - 0.25, d / 2 - 1.1], [w - 1, ridge - 0.25, d / 2 - 1.1], [w - 1, ridge - 0.02, d / 2 - 0.15], [1, ridge - 0.02, d / 2 - 0.15]);
+  for (let x = 1; x < w - 1; x += 1) pl('faint', [x, ridge - 0.25, d / 2 - 1.1], [x, ridge - 0.02, d / 2 - 0.15]);
+  // blacha trapezowa — linie pionowe
+  for (let x = 0.5; x < w; x += 0.5) pl('faint', [x, 0.6, 0], [x, h, 0]);
+  for (let z = 0.5; z < d; z += 0.5) {
+    const top = z <= d / 2 ? h + (ridge - h) * (z / (d / 2)) : h + (ridge - h) * ((d - z) / (d / 2));
+    if (z < 2.3 || z > 6.3) pl('faint', [0, 0.6, z], [0, top, z]);
+    else pl('faint', [0, 3.8, z], [0, top, z]);
+  }
+  pl('detail', [w, 0.6, 0], [0, 0.6, 0], [0, 0.6, d]);
+  // pas okien
+  rectL('detail', 1, w - 1, 3.2, 3.9);
+  for (let x = 2; x < w - 1; x += 1) pl('faint', [x, 3.2, 0], [x, 3.9, 0]);
+  // brama segmentowa i drzwi
+  rectR('accent', 2.4, 6.2, 0, 3.6);
+  for (let y = 0.45; y < 3.6; y += 0.45) pl('detail', [0, y, 2.4], [0, y, 6.2]);
+  rectR('detail', 7.1, 7.9, 0, 2.1);
+  // rury spustowe
+  pl('detail', [0.2, h, -0.15], [0.2, 0.05, -0.15]);
+  pl('detail', [w - 0.2, h, -0.15], [w - 0.2, 0.05, -0.15]);
+  guides(w, d, h);
+}
+
+const style: Record<Kind, { stroke: string; o: number; w: number; dash?: string }> = {
+  accent: { stroke: '#9bdcff', o: 0.95, w: 1.4 },
+  edge: { stroke: '#5cc2ff', o: 0.9, w: 1 },
+  detail: { stroke: '#5cc2ff', o: 0.6, w: 1 },
+  faint: { stroke: '#5cc2ff', o: 0.26, w: 1 },
+  dim: { stroke: '#38bdf8', o: 0.6, w: 1 },
+  guide: { stroke: '#7cc4ff', o: 0.22, w: 1, dash: '3 4' },
+};
+const order: Kind[] = ['guide', 'faint', 'detail', 'dim', 'edge', 'accent'];
+---
+
+<svg viewBox="0 0 400 250" class:list={['block h-full w-full', cls]} role="img" aria-label={label} preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id={`${uid}-minor`} width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M10 0H0V10" fill="none" stroke="#7cc4ff" stroke-opacity="0.045" />
+    </pattern>
+    <pattern id={`${uid}-major`} width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M50 0H0V50" fill="none" stroke="#7cc4ff" stroke-opacity="0.09" />
+    </pattern>
+    <radialGradient id={`${uid}-glow`} cx="55%" cy="55%" r="60%">
+      <stop offset="0" stop-color="#1868f0" stop-opacity="0.22" />
+      <stop offset="1" stop-color="#1868f0" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="250" fill="#0a1424" />
+  <rect width="400" height="250" fill={`url(#${uid}-glow)`} />
+  <rect width="400" height="250" fill={`url(#${uid}-minor)`} />
+  <rect width="400" height="250" fill={`url(#${uid}-major)`} />
+  <path d="M14 22V14H22M378 14H386V22M386 228V236H378M22 236H14V228" fill="none" stroke="#7cc4ff" stroke-opacity="0.35" vector-effect="non-scaling-stroke" />
+
+  {fills.map((f) => <path d={f.d} fill="#38bdf8" fill-opacity={f.o} />)}
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    {
+      order.map((k) => (
+        <path
+          d={paths[k].join('')}
+          stroke={style[k].stroke}
+          stroke-opacity={style[k].o}
+          stroke-width={style[k].w}
+          stroke-dasharray={style[k].dash}
+          vector-effect="non-scaling-stroke"
+        />
+      ))
+    }
+  </g>
+</svg>

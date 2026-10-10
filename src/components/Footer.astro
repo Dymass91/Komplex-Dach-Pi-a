@@ -1,7 +1,6 @@
 ---
 import { business, nav } from '../data/site';
 import { services } from '../data/services';
-import { locationPages } from '../data/locations';
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 
@@ -36,18 +35,17 @@ const year = new Date().getFullYear();
       </ul>
     </nav>
 
-    <nav aria-label="Obszar działania">
-      <h2 class="mb-5 text-sm font-semibold text-white">Dekarz w okolicy</h2>
-      <ul class="space-y-2.5 text-sm">
-        <li><a class="transition-colors hover:text-white" href="/">Dekarz Piła</a></li>
-        {
-          locationPages.map((l) => (
-            <li><a class="transition-colors hover:text-white" href={`/obszar-dzialania/${l.slug}/`}>Dekarz {l.name}</a></li>
-          ))
-        }
-        <li><a class="text-sky transition-colors hover:text-white" href="/obszar-dzialania/">Cały obszar działania</a></li>
-      </ul>
-    </nav>
+    <div>
+      <h2 class="mb-5 text-sm font-semibold text-white">Obszar działania</h2>
+      <p class="text-sm leading-relaxed">Piła i miejscowości w promieniu około {business.radiusKm} km — sprawdź, czy dojeżdżamy do Ciebie.</p>
+      <a
+        href="/obszar-dzialania/"
+        class="group mt-5 inline-flex items-center gap-2 whitespace-nowrap rounded-md border border-sky/40 px-3.5 py-2.5 text-[0.82rem] font-semibold text-white transition-colors hover:border-sky hover:bg-sky/10"
+      >
+        Zobacz obszar działania
+        <Icon name="arrow" size={16} class="text-sky transition-transform duration-300 group-hover:translate-x-1" />
+      </a>
+    </div>
 
     <div>
       <h2 class="mb-5 text-sm font-semibold text-white">Szybki kontakt</h2>

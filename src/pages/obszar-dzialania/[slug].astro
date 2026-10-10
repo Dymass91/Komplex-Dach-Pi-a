@@ -38,11 +38,20 @@ const jsonLd = [
     about: { '@id': new URL('/#firma', site).href },
     spatialCoverage: { '@type': 'City', name: l.name, geo: { '@type': 'GeoCoordinates', latitude: l.lat, longitude: l.lon } },
   },
-  { '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+  // Dane FAQPage tylko dla stron dopuszczonych do indeksowania
+  ...(l.indexable
+    ? [{ '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }]
+    : []),
 ];
 ---
 
-<Base title={`Dekarz ${l.name} — dachy, naprawy, przeglądy | Komplex-Dach Piła`} description={page.metaDescription} breadcrumbs={crumbs} jsonLd={jsonLd}>
+<Base
+  title={`Dekarz ${l.name} — dachy, naprawy, przeglądy | Komplex-Dach Piła`}
+  description={page.metaDescription}
+  breadcrumbs={crumbs}
+  jsonLd={jsonLd}
+  noindex={!l.indexable}
+>
   <PageHero crumbs={crumbs} eyebrow={`Obszar działania · ok. ${km} km od Piły`} title={`Dekarz ${l.name} i okolice`} lead={page.intro[0]}>
     <dl class="mt-10 grid max-w-xl grid-cols-3 gap-4 border-t border-white/10 pt-6 text-sm" data-hero-fade>
       <div><dt class="text-white/50">Odległość</dt><dd class="mt-1 font-semibold">ok. {km} km</dd></div>

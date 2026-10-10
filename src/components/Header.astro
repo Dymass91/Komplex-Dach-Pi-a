@@ -16,7 +16,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : !href.includes
     <Logo width={150} eager />
 
     <nav aria-label="Główna nawigacja" class="hidden lg:block">
-      <ul class="flex items-center gap-7 text-[0.82rem] font-medium text-white/80">
+      <ul class="flex items-center gap-6 whitespace-nowrap text-[0.82rem] font-medium text-white/80 xl:gap-7">
         {
           nav.map((item) => (
             <li>
@@ -37,8 +37,8 @@ const isActive = (href: string) => (href === '/' ? path === '/' : !href.includes
     </nav>
 
     <div class="flex items-center gap-5">
-      <PhoneLink variant="plain" arrow={false} class="hidden text-[0.95rem] text-white transition-colors hover:text-sky md:inline-flex" location="header-number" />
-      <a href={business.phoneHref} class="btn-primary hidden !px-5 !py-2.5 !text-[0.82rem] sm:inline-flex" data-call="header-button">
+      <PhoneLink variant="plain" arrow={false} class="hidden whitespace-nowrap text-[0.95rem] text-white transition-colors hover:text-sky md:inline-flex lg:hidden xl:inline-flex" location="header-number" />
+      <a href={business.phoneHref} class="btn-primary hidden whitespace-nowrap !px-5 !py-2.5 !text-[0.82rem] sm:inline-flex" data-call="header-button">
         Zadzwoń teraz
       </a>
       <button
