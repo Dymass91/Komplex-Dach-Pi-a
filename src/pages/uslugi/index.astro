@@ -1,12 +1,25 @@
 ---
-import { Image } from 'astro:assets';
+import type { ComponentProps } from 'astro/types';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
-import Drawing from '../../components/Drawing.astro';
+import BlueprintCard from '../../components/BlueprintCard.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import Icon from '../../components/Icon.astro';
 import { services } from '../../data/services';
-import { photos } from '../../data/images';
+
+// Miniatury: rysunki blueprint (6 wspólnych ze stroną główną + 4 w tym samym stylu)
+const blueprintFor: Record<string, ComponentProps<typeof BlueprintCard>['service']> = {
+  'wykonanie-dachow': 'wykonanie',
+  'naprawa-dachu': 'naprawy',
+  'przeglad-dachu': 'przeglady',
+  'serwis-dachu': 'serwis',
+  'wycena-dachu': 'wycena',
+  'docieplenie-poddasza': 'ocieplanie',
+  'montaz-okien-dachowych': 'okna',
+  'odsniezanie-dachow': 'odsniezanie',
+  'przeglad-dachu-przed-zima': 'przedzimowy',
+  'obrobki-blacharskie-kominow': 'obrobki',
+};
 
 const crumbs = [
   { name: 'Strona główna', href: '/' },
@@ -42,11 +55,7 @@ const listLd = {
               <a href={`/uslugi/${s.slug}/`} class="group grid grid-cols-[auto_1fr_auto] items-center gap-5 py-6 md:grid-cols-[60px_160px_1fr_auto] md:gap-8 md:py-7">
                 <span class="font-mono text-xs text-blue">{String(i + 1).padStart(2, '0')}</span>
                 <span class="hidden aspect-[4/3] overflow-hidden rounded-md md:block">
-                  {s.photo ? (
-                    <Image src={photos[s.photo].src} alt="" widths={[320]} sizes="160px" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                  ) : (
-                    <Drawing name={s.drawing} label="" />
-                  )}
+                  <BlueprintCard service={blueprintFor[s.slug]} label="" class="transition-transform duration-700 group-hover:scale-110" />
                 </span>
                 <span>
                   <h2 class="text-[clamp(1.2rem,2.2vw,1.75rem)] font-bold tracking-tight transition-colors group-hover:text-blue">{s.name}</h2>
