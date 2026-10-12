@@ -1,0 +1,3 @@
+# Stare adresy map witryny (wtyczka @astrojs/sitemap) → jedna mapa
+/sitemap-index.xml /sitemap.xml 301
+/sitemap-0.xml /sitemap.xml 301

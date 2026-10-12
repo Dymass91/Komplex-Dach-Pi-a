@@ -21,5 +21,5 @@ const run = (cmd) => {
   if (r.status !== 0) process.exit(r.status ?? 1);
 };
 
-run('npx astro build');
+run('npm run build'); // build + kontrola sitemapy (postbuild)
 run(`npx wrangler pages deploy dist --project-name=${PROJECT} --branch=main`);

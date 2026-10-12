@@ -1,9 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { writeFile } from 'node:fs/promises';
-import { noindexLocationPaths } from './src/data/locations.ts';
+import { noindexLocationPaths } from './src/data/locations.ts'; // nagłówki X-Robots-Tag dla stron noindex
 import { validateSiteUrl } from './scripts/site-url.mjs';
 
 /**
@@ -44,11 +43,7 @@ export default defineConfig({
   trailingSlash: 'always',
   output: 'static',
   integrations: [
-    // Strony noindex nie trafiają do sitemapy
-    sitemap({
-      lastmod: new Date(),
-      filter: (page) => ![...noindexLocationPaths, '/polityka-prywatnosci/'].includes(new URL(page).pathname),
-    }),
+    // Mapa witryny: src/pages/sitemap.xml.ts (jeden plik, kontrola po buildzie: scripts/check-sitemap.mjs)
     robotsHeaders(),
   ],
   vite: { plugins: [tailwindcss()] },
