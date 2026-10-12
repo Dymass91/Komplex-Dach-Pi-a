@@ -45,7 +45,10 @@ export default defineConfig({
   output: 'static',
   integrations: [
     // Strony noindex nie trafiają do sitemapy
-    sitemap({ lastmod: new Date(), filter: (page) => !noindexLocationPaths.some((path) => new URL(page).pathname === path) }),
+    sitemap({
+      lastmod: new Date(),
+      filter: (page) => ![...noindexLocationPaths, '/polityka-prywatnosci/'].includes(new URL(page).pathname),
+    }),
     robotsHeaders(),
   ],
   vite: { plugins: [tailwindcss()] },

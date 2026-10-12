@@ -1,0 +1,10 @@
+# Konfiguracja projektu Cloudflare Pages „komplex-dach-pila” (Direct Upload przez `npm run deploy`).
+# Statyczna strona z katalogu dist + Pages Functions z katalogu functions/.
+name = "komplex-dach-pila"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-10-01"
+
+# Liczniki kliknięć w numer telefonu (functions/api/call.js, raport: npm run calls)
+[[kv_namespaces]]
+binding = "CALLS"
+id = "28918f8cccd04612abc6489d113aedc1"

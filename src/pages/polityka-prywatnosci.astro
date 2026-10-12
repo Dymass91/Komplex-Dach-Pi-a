@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { business } from '../data/site';
+
+const crumbs = [
+  { name: 'Strona główna', href: '/' },
+  { name: 'Polityka prywatności', href: '/polityka-prywatnosci/' },
+];
+---
+
+<Base
+  title="Polityka prywatności | Komplex-Dach Piła"
+  description="Jak strona Komplex-Dach Piła przetwarza dane: bez cookies, bez formularzy, z anonimowym licznikiem kliknięć w numer telefonu."
+  breadcrumbs={crumbs}
+  noindex
+>
+  <PageHero crumbs={crumbs} eyebrow="Prywatność" title="Polityka prywatności" />
+
+  <section class="bg-paper py-16 md:py-24">
+    <div class="container-x">
+      <article class="prose-kd max-w-3xl">
+        <h2 class="!mt-0">Kto prowadzi stronę</h2>
+        <p>
+          Stronę prowadzi {business.name}, {business.city}. Kontakt z nami odbywa się wyłącznie telefonicznie:
+          <a class="font-medium text-blue" href={business.phoneHref}>{business.phoneDisplay}</a>. Strona nie zawiera
+          formularzy kontaktowych i nie zbiera adresów e-mail.
+        </p>
+
+        <h2>Pliki cookies</h2>
+        <p>
+          Strona nie używa plików cookies ani innych mechanizmów zapisujących informacje na Twoim urządzeniu
+          (np. localStorage) do celów analitycznych lub marketingowych. Nie korzystamy z Google Analytics ani
+          z narzędzi reklamowych.
+        </p>
+
+        <h2>Licznik kliknięć w numer telefonu</h2>
+        <p>
+          Aby wiedzieć, które podstrony pomagają klientom do nas zadzwonić, liczymy kliknięcia w numer telefonu. Po
+          kliknięciu zapisywany jest wyłącznie zagregowany licznik dzienny obejmujący:
+        </p>
+        <ul>
+          <li>datę (dzień),</li>
+          <li>adres podstrony, na której kliknięto numer,</li>
+          <li>miejsce przycisku na stronie (np. nagłówek, pasek na telefonie),</li>
+          <li>ogólny typ urządzenia (ekran dotykowy lub komputer),</li>
+          <li>źródło wizyty: parametr kampanii (UTM) albo nazwę domeny, z której przyszła wizyta.</li>
+        </ul>
+        <p>
+          Nie zapisujemy adresu IP, identyfikatora przeglądarki ani żadnych danych pozwalających zidentyfikować osobę.
+          Kliknięcie numeru nie jest dla nas informacją o wykonanym połączeniu.
+        </p>
+
+        <h2>Hosting</h2>
+        <p>
+          Strona jest udostępniana przez Cloudflare, Inc. (Cloudflare Pages). Jak każdy serwer, Cloudflare technicznie
+          przetwarza dane potrzebne do dostarczenia strony i ochrony przed nadużyciami (np. adres IP). Czcionki
+          i pozostałe pliki strony są serwowane z tej samej domeny.
+        </p>
+
+        <h2>Rozmowy telefoniczne</h2>
+        <p>
+          Jeśli do nas zadzwonisz, dane podane w rozmowie (np. imię, adres budynku) wykorzystujemy wyłącznie do
+          przygotowania wyceny i wykonania usługi.
+        </p>
+      </article>
+    </div>
+  </section>
+</Base>

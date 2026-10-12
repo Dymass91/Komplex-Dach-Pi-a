@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "images": "node scripts/prepare-images.mjs",
-    "deploy": "node scripts/deploy.mjs"
+    "deploy": "node scripts/deploy.mjs",
+    "calls": "node scripts/calls-report.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

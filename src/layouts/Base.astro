@@ -142,6 +142,32 @@ const schema = JSON.stringify({ '@context': 'https://schema.org', '@graph': grap
     <MobileCallBar />
 
     <script is:inline>
+      // Pomiar kliknięć w telefon: bez cookies i bez identyfikatorów — tylko ścieżka, miejsce przycisku,
+      // typ urządzenia i źródło wizyty (UTM lub domena odsyłająca). Szczegóły: functions/api/call.js
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a[href^="tel:"]');
+        if (!a || !navigator.sendBeacon) return;
+        var q = new URLSearchParams(location.search);
+        var src = q.get('utm_source');
+        if (!src) {
+          try {
+            var ref = document.referrer ? new URL(document.referrer).hostname : '';
+            src = !ref ? 'bezposrednio' : ref === location.hostname ? 'wewnetrzne' : ref.replace(/^www\./, '');
+          } catch (err) {
+            src = 'nieznane';
+          }
+        }
+        var data = {
+          p: location.pathname,
+          c: a.getAttribute('data-call') || 'inne',
+          d: matchMedia('(pointer: coarse)').matches ? 'm' : 'd',
+          s: src,
+        };
+        navigator.sendBeacon('/api/call', new Blob([JSON.stringify(data)], { type: 'text/plain' }));
+      });
+    </script>
+
+    <script is:inline>
       // Elementy widoczne już w pierwszym widoku pokazujemy od razu (bez czekania na GSAP) — szybszy LCP.
       if (document.documentElement.classList.contains('js-motion')) {
         var vh = window.innerHeight;

@@ -30,6 +30,10 @@ export type Location = {
   /** Czy strona lokalna może być indeksowana — zawsze jawnie, domyślnie false */
   indexable: boolean;
   page?: {
+    /** Forma „z …” (dopełniacz), np. „z Wałcza” */
+    genitive: string;
+    /** Starostwo powiatowe właściwe dla spraw budowlanych (organ: starosta), w miejscowniku */
+    office: string;
     metaDescription: string;
     intro: string[];
     nearby: string[];
@@ -39,11 +43,13 @@ export type Location = {
 
 export const locations: Location[] = [
   {
-    name: 'Wałcz', slug: 'walcz', locative: 'Wałczu', lat: 53.274, lon: 16.471, county: 'wałecki', voivodeship: 'zachodniopomorskie', major: true, indexable: false,
+    name: 'Wałcz', slug: 'walcz', locative: 'Wałczu', lat: 53.274, lon: 16.471, county: 'wałecki', voivodeship: 'zachodniopomorskie', major: true, indexable: true,
     page: {
-      metaDescription: 'Dekarz Wałcz: wykonanie dachów, naprawy przecieków, przeglądy i odśnieżanie. Komplex-Dach z Piły — zadzwoń: 601 568 841.',
+      genitive: 'Wałcza',
+      office: 'Starostwie Powiatowym w Wałczu',
+      metaDescription: 'Dekarz Wałcz: wykonanie i naprawa dachów, przeglądy, odśnieżanie. Komplex-Dach z Piły, od 2001 r. Wycena po rozmowie: 601 568 841.',
       intro: [
-        'Wałcz leży na północny zachód od Piły, już po stronie województwa zachodniopomorskiego.',
+        'Nowe dachy, naprawy przecieków, przeglądy i odśnieżanie dachów w Wałczu i okolicach. To już województwo zachodniopomorskie, ale dla nas liczy się promień ok. 100 km od Piły, nie granica województw.',
         'Wałcz i okoliczne miejscowości mieszczą się w naszym obszarze działania — zarówno przy nowych dachach, jak i przy naprawach, przeglądach czy odśnieżaniu. Zakres prac i termin ustalamy telefonicznie: zadzwoń i opisz, czego potrzebujesz.',
       ],
       nearby: ['Tuczno', 'Mirosławiec', 'Człopa'],
@@ -54,11 +60,13 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Złotów', slug: 'zlotow', locative: 'Złotowie', lat: 53.363, lon: 17.041, county: 'złotowski', voivodeship: 'wielkopolskie', major: true, indexable: false,
+    name: 'Złotów', slug: 'zlotow', locative: 'Złotowie', lat: 53.363, lon: 17.041, county: 'złotowski', voivodeship: 'wielkopolskie', major: true, indexable: true,
     page: {
-      metaDescription: 'Dekarz Złotów: pokrycia dachowe, naprawy dachów, przeglądy, okna dachowe. Komplex-Dach z Piły — tel. 601 568 841.',
+      genitive: 'Złotowa',
+      office: 'Starostwie Powiatowym w Złotowie',
+      metaDescription: 'Dekarz Złotów: pokrycia i naprawy dachów, okna dachowe, przeglądy. Komplex-Dach z Piły, od 2001 r. Zadzwoń: 601 568 841.',
       intro: [
-        'Złotów leży na północny wschód od Piły, w północnej Wielkopolsce. Obsługujemy samo miasto oraz miejscowości powiatu złotowskiego.',
+        'Pokrycia dachowe, naprawy dachów, montaż okien dachowych i przeglądy w Złotowie oraz w miejscowościach powiatu złotowskiego.',
         'W tym rejonie wykonujemy pełen zakres prac dachowych — od nowych pokryć, przez naprawy przecieków i obróbki kominów, po montaż okien dachowych i docieplenia poddaszy. Pierwszy krok to zawsze rozmowa telefoniczna.',
       ],
       nearby: ['Krajenka', 'Jastrowie', 'Okonek', 'Łobżenica'],
@@ -69,11 +77,13 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Chodzież', slug: 'chodziez', locative: 'Chodzieży', lat: 52.995, lon: 16.92, county: 'chodzieski', voivodeship: 'wielkopolskie', major: true, indexable: false,
+    name: 'Chodzież', slug: 'chodziez', locative: 'Chodzieży', lat: 52.995, lon: 16.92, county: 'chodzieski', voivodeship: 'wielkopolskie', major: true, indexable: true,
     page: {
-      metaDescription: 'Dekarz Chodzież: wykonanie i naprawa dachów, przeglądy, serwis, odśnieżanie. Komplex-Dach z Piły — zadzwoń: 601 568 841.',
+      genitive: 'Chodzieży',
+      office: 'Starostwie Powiatowym w Chodzieży',
+      metaDescription: 'Dekarz Chodzież: wykonanie i naprawa dachów, serwis, przeglądy przed zimą. Komplex-Dach z Piły, od 2001 r. Tel. 601 568 841.',
       intro: [
-        'Chodzież leży na południowy wschód od Piły. To miasto i okolice, do których mamy blisko.',
+        'Wykonanie i naprawa dachów, serwis oraz przeglądy przed zimą w Chodzieży i okolicach — jednym z najbliższych miast w naszym obszarze działania.',
         'W Chodzieży i okolicach oferujemy usługi dla właścicieli domów, firm i wspólnot mieszkaniowych: kompleksowe wykonanie dachów, naprawy, serwis oraz przeglądy — także przedzimowe.',
       ],
       nearby: ['Ujście', 'Margonin', 'Szamocin', 'Budzyń'],
@@ -84,11 +94,13 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Trzcianka', slug: 'trzcianka', locative: 'Trzciance', lat: 53.041, lon: 16.454, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie', major: true, indexable: false,
+    name: 'Trzcianka', slug: 'trzcianka', locative: 'Trzciance', lat: 53.041, lon: 16.454, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie', major: true, indexable: true,
     page: {
-      metaDescription: 'Dekarz Trzcianka: dachy, naprawy przecieków, obróbki kominów, przeglądy. Komplex-Dach z Piły — tel. 601 568 841.',
+      genitive: 'Trzcianki',
+      office: 'Starostwie Powiatowym w Czarnkowie (powiat czarnkowsko-trzcianecki)',
+      metaDescription: 'Dekarz Trzcianka: naprawy przecieków, obróbki kominów, nowe dachy, przeglądy. Komplex-Dach z Piły, od 2001 r. Tel. 601 568 841.',
       intro: [
-        'Trzcianka leży na południowy zachód od Piły i należy do najbliższych miast w naszym obszarze działania.',
+        'Naprawy przecieków, obróbki kominów, nowe dachy i przeglądy w Trzciance i okolicach — jednym z najbliższych miast w naszym obszarze działania.',
         'W Trzciance i okolicach wykonujemy nowe dachy i wymiany pokryć, usuwamy przecieki, wykonujemy obróbki blacharskie oraz przeglądy dachów. Jeśli masz problem z dachem, zadzwoń i opisz go — doradzimy, od czego zacząć.',
       ],
       nearby: ['Wieleń', 'Ujście', 'Czarnków'],
@@ -99,11 +111,13 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Czarnków', slug: 'czarnkow', locative: 'Czarnkowie', lat: 52.902, lon: 16.563, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie', major: true, indexable: false,
+    name: 'Czarnków', slug: 'czarnkow', locative: 'Czarnkowie', lat: 52.902, lon: 16.563, county: 'czarnkowsko-trzcianecki', voivodeship: 'wielkopolskie', major: true, indexable: true,
     page: {
-      metaDescription: 'Dekarz Czarnków: wykonanie dachów, naprawy, przeglądy, docieplenia poddaszy. Komplex-Dach z Piły — zadzwoń: 601 568 841.',
+      genitive: 'Czarnkowa',
+      office: 'Starostwie Powiatowym w Czarnkowie',
+      metaDescription: 'Dekarz Czarnków: wykonanie dachów, naprawy, docieplenia poddaszy, przeglądy. Komplex-Dach z Piły, od 2001 r. Tel. 601 568 841.',
       intro: [
-        'Czarnków, siedziba powiatu czarnkowsko-trzcianeckiego, leży nad Notecią, na południe od Piły.',
+        'Wykonanie dachów, naprawy, docieplenia poddaszy i przeglądy w Czarnkowie i okolicznych miejscowościach.',
         'Obsługujemy Czarnków i okoliczne miejscowości: wykonujemy dachy, naprawiamy przecieki, ocieplamy poddasza i wykonujemy przeglądy. Termin i zakres prac ustalamy telefonicznie — najlepiej zadzwonić i opisać, czego potrzebujesz.',
       ],
       nearby: ['Wieleń', 'Lubasz', 'Trzcianka'],
@@ -114,11 +128,13 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Wągrowiec', slug: 'wagrowiec', locative: 'Wągrowcu', lat: 52.809, lon: 17.199, county: 'wągrowiecki', voivodeship: 'wielkopolskie', major: true, indexable: false,
+    name: 'Wągrowiec', slug: 'wagrowiec', locative: 'Wągrowcu', lat: 52.809, lon: 17.199, county: 'wągrowiecki', voivodeship: 'wielkopolskie', major: true, indexable: true,
     page: {
-      metaDescription: 'Dekarz Wągrowiec: pokrycia dachowe, naprawy i serwis dachów, odśnieżanie. Komplex-Dach z Piły — tel. 601 568 841.',
+      genitive: 'Wągrowca',
+      office: 'Starostwie Powiatowym w Wągrowcu',
+      metaDescription: 'Dekarz Wągrowiec: pokrycia dachowe, naprawy i serwis dachów, odśnieżanie. Komplex-Dach z Piły, od 2001 r. Tel. 601 568 841.',
       intro: [
-        'Wągrowiec leży na południowy wschód od Piły — to jeden z dalszych kierunków w naszym obszarze działania.',
+        'Pokrycia dachowe, naprawy i serwis dachów oraz odśnieżanie w Wągrowcu i okolicach — jednym z dalszych kierunków w naszym obszarze działania.',
         'W Wągrowcu i okolicach oferujemy pełen zakres usług dachowych: wykonanie i wymianę dachów, serwis i przeglądy, a także naprawy. Zadzwoń i opisz zakres prac — powiemy, kiedy możemy przyjechać.',
       ],
       nearby: ['Gołańcz', 'Margonin', 'Mieścisko'],
@@ -129,11 +145,13 @@ export const locations: Location[] = [
     },
   },
   {
-    name: 'Szczecinek', slug: 'szczecinek', locative: 'Szczecinku', lat: 53.708, lon: 16.699, county: 'szczecinecki', voivodeship: 'zachodniopomorskie', major: true, indexable: false,
+    name: 'Szczecinek', slug: 'szczecinek', locative: 'Szczecinku', lat: 53.708, lon: 16.699, county: 'szczecinecki', voivodeship: 'zachodniopomorskie', major: true, indexable: true,
     page: {
-      metaDescription: 'Dekarz Szczecinek: wykonanie dachów, naprawy, przeglądy przed zimą, odśnieżanie. Komplex-Dach z Piły — zadzwoń: 601 568 841.',
+      genitive: 'Szczecinka',
+      office: 'Starostwie Powiatowym w Szczecinku',
+      metaDescription: 'Dekarz Szczecinek: wykonanie i naprawa dachów, przeglądy przed zimą, odśnieżanie. Komplex-Dach z Piły, od 2001 r. Tel. 601 568 841.',
       intro: [
-        'Szczecinek leży na północ od Piły, w województwie zachodniopomorskim — to jeden z dalszych kierunków w naszym obszarze działania.',
+        'Wykonanie i naprawa dachów, przeglądy przed zimą i odśnieżanie w Szczecinku i okolicach — jednym z dalszych kierunków w naszym obszarze, już w województwie zachodniopomorskim.',
         'W Szczecinku i okolicach oferujemy wykonanie dachów, wymianę pokryć, przeglądy i serwis, a zimą także odśnieżanie dachów. Zadzwoń i opisz zakres — ustalimy termin dojazdu.',
       ],
       nearby: ['Okonek', 'Borne Sulinowo', 'Barwice'],

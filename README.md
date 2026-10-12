@@ -45,7 +45,7 @@ Każda miejscowość ma jawne pole `indexable` (domyślnie `false`). Strona z `i
 
 Ustaw `indexable: true` ręcznie, dopiero gdy strona ma zweryfikowane, pomocne informacje odróżniające ją od innych
 stron lokalnych (np. potwierdzone przez właściciela prace w okolicy, sprawdzone lokalne uwarunkowania dachowe).
-Zdjęcie z lokalnej realizacji jest cenne, ale niewymagane. Obecnie wszystkie 7 stron ma `indexable: false`.
+Zdjęcie z lokalnej realizacji jest cenne, ale niewymagane. Obecnie wszystkie 7 stron miast ma `indexable: true` (treść: oferta, kontakt, odległość, okoliczne miejscowości, właściwe starostwo i konserwator zabytków).
 
 ## SEO i indeksowanie
 
