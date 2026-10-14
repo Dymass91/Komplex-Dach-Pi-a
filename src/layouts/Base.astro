@@ -12,6 +12,7 @@ import { business } from '../data/site';
 import { services } from '../data/services';
 import { photos } from '../data/images';
 import logo from '../assets/images/logo-komplex-dach.png';
+import ogBaner from '../assets/images/og-baner-komplex-dach.jpg';
 
 export interface Crumb { name: string; href: string }
 
@@ -25,8 +26,9 @@ interface Props {
   noindex?: boolean;
 }
 
-// Domyślny obraz udostępnień: autentyczne, nieprzetworzone zdjęcie realizacji (nigdy kadr przetworzony przez AI)
-const { title, description, ogImage = photos.domZLukarna.src, breadcrumbs, jsonLd = [], noindex = false } = Astro.props;
+// Domyślny obraz udostępnień (podgląd linku w komunikatorach i mediach): baner firmowy 1200×630.
+// Dane strukturalne firmy nadal używają autentycznego zdjęcia realizacji (businessImg niżej).
+const { title, description, ogImage = ogBaner, breadcrumbs, jsonLd = [], noindex = false } = Astro.props;
 
 const site = Astro.site!;
 const canonical = new URL(Astro.url.pathname, site).href;
