@@ -9,6 +9,7 @@ const indexablePaths = [
   '/uslugi/',
   ...services.map((s) => `/uslugi/${s.slug}/`),
   '/realizacje/',
+  '/mycie-dachow/',
   '/obszar-dzialania/',
   ...locationPages.filter((l) => l.indexable).map((l) => `/obszar-dzialania/${l.slug}/`),
 ];

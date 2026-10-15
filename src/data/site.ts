@@ -29,6 +29,7 @@ export const business = {
 export const nav = [
   { label: 'Strona główna', href: '/' },
   { label: 'Usługi', href: '/uslugi/' },
+  { label: 'Mycie dachów', href: '/mycie-dachow/' },
   { label: 'Realizacje', href: '/realizacje/' },
   { label: 'Obszar działania', href: '/obszar-dzialania/' },
   { label: 'FAQ', href: '/#faq' },

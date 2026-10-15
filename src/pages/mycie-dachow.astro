@@ -1,0 +1,168 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import PhoneLink from '../components/PhoneLink.astro';
+import { business } from '../data/site';
+import { realizacjaImg } from '../data/realizacje';
+
+// Usługa potwierdzona przez właściciela. Opis bez niepotwierdzonych szczegółów (środki, ceny, gwarancje, terminy).
+const crumbs = [
+  { name: 'Strona główna', href: '/' },
+  { name: 'Mycie dachów', href: '/mycie-dachow/' },
+];
+
+const videos = [
+  { src: '/video/mycie-dachu-rezydencja.mp4', poster: '/video/mycie-dachu-rezydencja.jpg', title: 'Mycie dachu dużego domu z podnośnika koszowego' },
+  { src: '/video/mycie-dachu-dom.mp4', poster: '/video/mycie-dachu-dom.jpg', title: 'Mycie dachu z dachówki ceramicznej na domu parterowym' },
+];
+
+const faq = [
+  {
+    q: 'Czy myjecie dachy z podnośnika?',
+    a: 'Tak — na filmach i zdjęciach na tej stronie widać mycie dachów z kosza podnośnika. Sposób dojścia do dachu dobieramy do budynku.',
+  },
+  {
+    q: 'Czy każdy dach można umyć?',
+    a: 'Zależy to od rodzaju i stanu pokrycia. Jeśli dach jest uszkodzony, najpierw warto go sprawdzić — przegląd i ewentualną naprawę też wykonujemy.',
+  },
+  {
+    q: 'Ile kosztuje mycie dachu?',
+    a: 'Cena zależy m.in. od wielkości i wysokości dachu, rodzaju pokrycia, stopnia zabrudzenia i dostępu do budynku. Wycenę ustalamy po rozmowie telefonicznej.',
+  },
+  {
+    q: 'Gdzie wykonujecie mycie dachów?',
+    a: `W Pile i w promieniu około ${business.radiusKm} km od miasta.`,
+  },
+];
+
+const site = Astro.site!;
+const jsonLd = [
+  {
+    '@type': 'Service',
+    name: 'Mycie dachów',
+    serviceType: 'Mycie dachów',
+    url: new URL('/mycie-dachow/', site).href,
+    provider: { '@id': new URL('/#firma', site).href },
+    areaServed: { '@type': 'City', name: 'Piła' },
+  },
+  { '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+---
+
+<Base
+  title="Mycie dachów Piła i okolice — z podnośnika | Komplex-Dach"
+  description="Mycie dachów w Pile i w promieniu ok. 100 km. Pracujemy z podnośnika koszowego — zobacz filmy z naszej pracy. Wycena telefonicznie: 601 568 841."
+  breadcrumbs={crumbs}
+  jsonLd={jsonLd}
+  ogImage={realizacjaImg('29153')}
+>
+  <PageHero
+    crumbs={crumbs}
+    eyebrow="Usługi dekarskie · Piła i okolice"
+    title="Mycie dachów w Pile i okolicach"
+    lead="Mech, glony i zabrudzenia zmieniają wygląd dachu. Myjemy dachy domów i większych budynków, pracując z podnośnika koszowego. Zadzwoń i opisz dach — ustalimy szczegóły i wycenę."
+    photo={{ src: realizacjaImg('29153'), alt: 'Mycie dachu rezydencji z kosza podnośnika' }}
+  />
+
+  <!-- Filmy -->
+  <section class="bg-paper py-16 md:py-24" aria-labelledby="filmy-title">
+    <div class="container-x">
+      <div data-reveal>
+        <p class="eyebrow">Filmy z naszej pracy</p>
+        <h2 id="filmy-title" class="h-section mt-3">Tak wygląda mycie dachu</h2>
+        <p class="mt-3 max-w-2xl text-ink/70">Krótkie nagrania z prac. Filmy ładują się dopiero po naciśnięciu „odtwórz”.</p>
+      </div>
+      <div class="mt-10 grid gap-6 lg:grid-cols-2">
+        {
+          videos.map((v) => (
+            <figure class="overflow-hidden rounded-lg border border-ink/10 bg-white" data-reveal>
+              <video
+                class="block aspect-video w-full bg-ink object-cover"
+                src={v.src}
+                poster={v.poster}
+                controls
+                preload="none"
+                playsinline
+                muted
+                width="848"
+                height="478"
+                aria-label={v.title}
+              />
+              <figcaption class="p-4 text-sm font-semibold">{v.title}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Opis -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="container-x grid gap-14 lg:grid-cols-[1fr_380px] lg:gap-20">
+      <div class="prose-kd max-w-3xl">
+        <h2 class="!mt-0" data-reveal>Dlaczego warto umyć dach</h2>
+        <p data-reveal>
+          Na dachu z czasem osadzają się mech, glony i brud. Czysty dach wygląda lepiej, a przy myciu łatwiej zauważyć
+          miejsca wymagające uwagi — pęknięcia, przesunięte elementy czy zniszczone obróbki.
+        </p>
+
+        <h2 data-reveal>Jak pracujemy</h2>
+        <ol class="!mt-6 grid !space-y-0 gap-3 sm:grid-cols-3" data-reveal>
+          <li class="before:!hidden rounded-lg border border-ink/10 bg-paper !p-4">
+            <span class="font-mono text-xs text-blue">01</span>
+            <span class="mt-2 block font-semibold text-ink">Telefon</span>
+            <span class="mt-1 block text-sm">
+              Zadzwoń pod <a href={business.phoneHref} data-call="mycie-steps" class="font-semibold text-blue">{business.phoneDisplay}</a> i opisz dach.
+            </span>
+          </li>
+          <li class="before:!hidden rounded-lg border border-ink/10 bg-paper !p-4">
+            <span class="font-mono text-xs text-blue">02</span>
+            <span class="mt-2 block font-semibold text-ink">Wycena</span>
+            <span class="mt-1 block text-sm">Ustalamy zakres i cenę — w razie potrzeby po obejrzeniu dachu.</span>
+          </li>
+          <li class="before:!hidden rounded-lg border border-ink/10 bg-paper !p-4">
+            <span class="font-mono text-xs text-blue">03</span>
+            <span class="mt-2 block font-semibold text-ink">Mycie</span>
+            <span class="mt-1 block text-sm">Myjemy dach w uzgodnionym terminie, pracując m.in. z podnośnika koszowego.</span>
+          </li>
+        </ol>
+
+        <h2 data-reveal>Mycie, przegląd i naprawa w jednym miejscu</h2>
+        <p data-reveal>
+          Jesteśmy firmą dekarską, więc jeśli przy myciu okaże się, że dach wymaga naprawy, możemy się tym zająć.
+          Zobacz też: <a class="font-medium text-blue underline decoration-blue/30 underline-offset-4" href="/uslugi/przeglad-dachu/">przegląd dachu</a>,
+          {' '}<a class="font-medium text-blue underline decoration-blue/30 underline-offset-4" href="/uslugi/naprawa-dachu/">naprawa dachu</a>
+          {' '}i <a class="font-medium text-blue underline decoration-blue/30 underline-offset-4" href="/uslugi/serwis-dachu/">serwis dachu</a>.
+        </p>
+
+        <figure class="not-prose mt-10 overflow-hidden rounded-lg" data-reveal-img>
+          <Image src={realizacjaImg('29156')} alt="Rezydencja z jasną elewacją i podnośnikiem koszowym przy dachu" widths={[480, 800, 1100]} sizes="(min-width: 1024px) 50vw, 100vw" format="webp" quality={74} class="aspect-[4/3] w-full object-cover" />
+        </figure>
+
+        <h2 data-reveal>Najczęstsze pytania</h2>
+        <div class="mt-6"><Faq items={faq} /></div>
+      </div>
+
+      <aside>
+        <div class="space-y-6 lg:sticky lg:top-28">
+          <div class="rounded-xl bg-night p-7 text-white">
+            <p class="eyebrow eyebrow-light">Mycie dachów — telefon</p>
+            <p class="mt-3 text-lg font-semibold leading-snug">Opisz dach przez telefon — ustalimy szczegóły i wycenę.</p>
+            <PhoneLink class="mt-6 w-full" location="mycie-aside" />
+            <p class="mt-4 text-xs text-white/60">Piła i okolice do ok. {business.radiusKm} km.</p>
+          </div>
+          <a href="/realizacje/" class="group flex items-center justify-between gap-3 rounded-xl border border-ink/10 bg-paper p-5 text-sm font-semibold transition-colors hover:border-blue">
+            Zobacz zdjęcia realizacji
+            <Icon name="arrow" size={16} class="text-blue transition-transform group-hover:translate-x-1" />
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <CtaBand title="Dach do umycia? Zadzwoń." />
+</Base>
